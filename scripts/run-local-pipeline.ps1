@@ -6,7 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$generateScript = Join-Path $repoRoot "services\synthea\generate-synthea.ps1"
+$generateScript = Join-Path $repoRoot "scripts\generate-synthea.ps1"
 $loadScript = Join-Path $repoRoot "services\loader\load-synthea.ps1"
 $inputPath = Join-Path $repoRoot "services\synthea\output\fhir"
 
