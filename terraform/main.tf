@@ -8,11 +8,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
-
+}
   # Backend local por ahora — en el Paso 3 (CI/CD) lo moveremos a S3
   # backend "s3" { ... }
-}
 
 provider "aws" {
   region = var.aws_region
@@ -40,11 +43,11 @@ module "networking" {
   subnet_ids   = var.subnet_ids
 }
 
-# module "storage" {
-#   source       = "./modules/storage"
-#   project_name = var.project_name
-#   environment  = var.environment
-# }
+module "storage" {
+  source       = "./modules/storage"
+  project_name = var.project_name
+  environment  = var.environment
+}
 
 # module "iam" {
 #   source       = "./modules/iam"
