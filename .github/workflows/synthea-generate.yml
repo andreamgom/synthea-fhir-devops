@@ -1,0 +1,49 @@
+# .github/workflows/synthea-generate.yml
+# Genera datos sintéticos cada lunes a las 6:00 UTC y los sube a S3
+
+name: Synthea Generate
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # cada lunes a las 6:00 UTC
+  workflow_dispatch:       # también se puede lanzar manualmente
+
+env:
+  AWS_REGION:  us-east-1
+  S3_BUCKET:   synthea-fhir-dev-datalake-547c2ee6
+
+jobs:
+  generate:
+    name: Generate synthetic FHIR data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Generate Synthea data
+        working-directory: services/synthea
+        run: |
+          ./run_synthea -p 20
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ env.AWS_REGION }}
+
+      - name: Upload FHIR bundles to S3
+        run: |
+          aws s3 cp services/synthea/output/fhir/ \
+            s3://${{ env.S3_BUCKET }}/raw/fhir/ \
+            --recursive \
+            --exclude "*hospital*" \
+            --exclude "*practitioner*"
