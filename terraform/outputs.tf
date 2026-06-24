@@ -15,6 +15,14 @@ output "rds_endpoint" {
   value       = module.database.endpoint
 }
 
+output "ecs_cluster_name" {
+  value = module.compute.ecs_cluster_name
+}
+
+output "fhir_task_definition_arn" {
+  value = module.compute.fhir_task_definition_arn
+}
+
 # output "github_actions_access_key_id" {
 #   value     = module.iam.github_actions_access_key_id
 #   sensitive = true

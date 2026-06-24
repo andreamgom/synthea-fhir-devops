@@ -65,9 +65,15 @@ module "database" {
   sg_rds_id    = module.networking.sg_rds_id
 }
 
-# module "compute" {
-#   source       = "./modules/compute"
-#   project_name = var.project_name
-#   environment  = var.environment
-#   vpc_id       = module.networking.vpc_id
-# }
+module "compute" {
+  source              = "./modules/compute"
+  project_name        = var.project_name
+  environment         = var.environment
+  vpc_id              = var.vpc_id
+  subnet_ids          = var.subnet_ids
+  sg_fhir_server_id   = module.networking.sg_fhir_server_id
+  lab_role_arn        = var.lab_role_arn
+  rds_endpoint        = module.database.endpoint
+  db_password         = var.db_password
+  ecr_fhir_server_url = module.storage.ecr_fhir_server_url
+}
