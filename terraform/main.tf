@@ -56,14 +56,14 @@ module "storage" {
 #   datalake_bucket_arn = module.storage.datalake_bucket_arn
 # }
 
-# module "database" {
-#   source          = "./modules/database"
-#   project_name    = var.project_name
-#   environment     = var.environment
-#   db_password     = var.db_password
-#   vpc_id          = module.networking.vpc_id
-#   private_subnets = module.networking.private_subnet_ids
-# }
+module "database" {
+  source       = "./modules/database"
+  project_name = var.project_name
+  environment  = var.environment
+  db_password  = var.db_password
+  subnet_ids   = var.subnet_ids
+  sg_rds_id    = module.networking.sg_rds_id
+}
 
 # module "compute" {
 #   source       = "./modules/compute"

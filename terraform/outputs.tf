@@ -10,6 +10,11 @@ output "lab_role_arn" {
   value       = var.lab_role_arn
 }
 
+output "rds_endpoint" {
+  description = "Endpoint RDS para configurar HAPI FHIR"
+  value       = module.database.endpoint
+}
+
 # output "github_actions_access_key_id" {
 #   value     = module.iam.github_actions_access_key_id
 #   sensitive = true
