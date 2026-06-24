@@ -50,9 +50,10 @@ module "storage" {
 }
 
 # module "iam" {
-#   source       = "./modules/iam"
-#   project_name = var.project_name
-#   environment  = var.environment
+#   source              = "./modules/iam"
+#   project_name        = var.project_name
+#   environment         = var.environment
+#   datalake_bucket_arn = module.storage.datalake_bucket_arn
 # }
 
 # module "database" {

@@ -33,3 +33,9 @@ variable "subnet_ids" {
   description = "IDs de subnets de AWS Academy"
   type        = list(string)
 }
+
+variable "lab_role_arn" {
+  description = "ARN del rol LabRole de AWS Academy — sustituye a los roles IAM custom"
+  type        = string
+  default     = "arn:aws:iam::964584584741:role/LabRole"
+}
