@@ -3,7 +3,7 @@
 variable "aws_region" {
   description = "Región AWS donde se despliega la infra"
   type        = string
-  default     = "eu-west-1"  # Irlanda — la más cercana a España con Free Tier completo
+  default     = "eu-west-1" # Irlanda — la más cercana a España con Free Tier completo
 }
 
 variable "project_name" {
