@@ -1,31 +1,76 @@
+# deploy/local/docker-compose.yml
+version: "3.8"
+
 services:
+
   postgres:
-    image: postgres:16
+    image: postgres:15
     container_name: synthea-postgres
-    restart: unless-stopped
     environment:
-      POSTGRES_DB: hapi
-      POSTGRES_USER: hapi
-      POSTGRES_PASSWORD: hapi123
+      POSTGRES_DB: hapifhir
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   fhir-server:
-    image: hapiproject/hapi:latest
-    container_name: synthea-fhir-server
-    restart: unless-stopped
-    depends_on:
-      - postgres
+    build:
+      context: ../../services/fhir-server
+      dockerfile: Dockerfile
+    container_name: synthea-fhir
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hapi
-      SPRING_DATASOURCE_USERNAME: hapi
-      SPRING_DATASOURCE_PASSWORD: hapi123
-      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/hapifhir
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+      - spring.datasource.driverClassName=org.postgresql.Driver
+      - hapi.fhir.fhir_version=R4
+      - management.endpoints.web.exposure.include=prometheus,health,info
+      - management.endpoint.prometheus.enabled=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/fhir/metadata"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: synthea-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../../services/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - fhir-server
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: synthea-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
 
 volumes:
   postgres_data:
+  grafana_data:
