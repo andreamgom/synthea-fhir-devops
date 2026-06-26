@@ -32,14 +32,22 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN:     ${{ secrets.AWS_SESSION_TOKEN }}
         run: |
-          terraform init -backend=false \
-            -var="db_password=dummy" \
-            -var="vpc_id=vpc-dummy" \
-            -var='subnet_ids=["subnet-dummy"]'
+          terraform init \
+            -backend=false \
+            -input=false
 
       - name: Terraform Validate
         working-directory: terraform
-        run: terraform validate
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN:     ${{ secrets.AWS_SESSION_TOKEN }}
+        run: |
+          terraform validate \
+            -var="db_password=dummy" \
+            -var="vpc_id=vpc-dummy" \
+            -var='subnet_ids=["subnet-dummy"]' \
+            -var="lab_role_arn=arn:aws:iam::123456789:role/dummy"
 
   sonarcloud:
     name: SonarCloud Analysis
@@ -49,7 +57,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # necesario para análisis completo de SonarCloud
+          fetch-depth: 0
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
