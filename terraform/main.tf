@@ -1,7 +1,7 @@
 # terraform/main.tf
 
 terraform {
-  required_version = ">= 1.6.0"
+  required_version = ">= 1.10.0"
 
   required_providers {
     aws = {
@@ -14,8 +14,8 @@ terraform {
     }
   }
 }
-  # Backend local por ahora — en el Paso 3 (CI/CD) lo moveremos a S3
-  # backend "s3" { ... }
+# Backend local por ahora — en el Paso 3 (CI/CD) lo moveremos a S3
+# backend "s3" { ... }
 
 provider "aws" {
   region = var.aws_region
