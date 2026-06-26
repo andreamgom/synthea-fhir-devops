@@ -14,8 +14,8 @@ terraform {
     }
   }
 }
-  # Backend local por ahora — en el Paso 3 (CI/CD) lo moveremos a S3
-  # backend "s3" { ... }
+# Backend local por ahora — en el Paso 3 (CI/CD) lo moveremos a S3
+# backend "s3" { ... }
 
 provider "aws" {
   region = var.aws_region

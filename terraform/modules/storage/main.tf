@@ -8,7 +8,7 @@ locals {
 resource "aws_s3_bucket" "datalake" {
   # Los nombres de S3 son globales — añadimos sufijo aleatorio para evitar colisiones
   bucket        = "${local.name_prefix}-datalake-${random_id.suffix.hex}"
-  force_destroy = true  # permite destruir aunque tenga objetos (útil en dev)
+  force_destroy = true # permite destruir aunque tenga objetos (útil en dev)
 
   tags = { Name = "${local.name_prefix}-datalake" }
 }
@@ -29,20 +29,20 @@ resource "aws_s3_bucket_public_access_block" "datalake" {
 
 # Estructura de prefijos del datalake (objetos vacíos que actúan como carpetas)
 resource "aws_s3_object" "raw_fhir" {
-  bucket = aws_s3_bucket.datalake.id
-  key    = "raw/fhir/"
+  bucket  = aws_s3_bucket.datalake.id
+  key     = "raw/fhir/"
   content = ""
 }
 
 resource "aws_s3_object" "processed" {
-  bucket = aws_s3_bucket.datalake.id
-  key    = "processed/"
+  bucket  = aws_s3_bucket.datalake.id
+  key     = "processed/"
   content = ""
 }
 
 resource "aws_s3_object" "datamarts" {
-  bucket = aws_s3_bucket.datalake.id
-  key    = "datamarts/"
+  bucket  = aws_s3_bucket.datalake.id
+  key     = "datamarts/"
   content = ""
 }
 
@@ -52,7 +52,7 @@ resource "aws_ecr_repository" "fhir_server" {
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
-    scan_on_push = true  # escaneo de vulnerabilidades automático
+    scan_on_push = true # escaneo de vulnerabilidades automático
   }
 
   tags = { Name = "${local.name_prefix}-fhir-server" }
