@@ -112,8 +112,8 @@ resource "aws_iam_user_policy" "github_actions" {
         Resource = "*"
       },
       {
-        Effect   = "Allow"
-        Action   = ["s3:PutObject", "s3:GetObject", "s3:ListBucket"]
+        Effect = "Allow"
+        Action = ["s3:PutObject", "s3:GetObject", "s3:ListBucket"]
         Resource = [
           var.datalake_bucket_arn,
           "${var.datalake_bucket_arn}/*"

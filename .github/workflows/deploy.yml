@@ -1,0 +1,55 @@
+# .github/workflows/deploy.yml
+# Se ejecuta al mergear a main — build Docker + push ECR + deploy ECS
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION:       us-east-1
+  ECR_FHIR_REPO:    synthea-fhir-dev-fhir-server
+  ECS_CLUSTER:      synthea-fhir-dev-cluster
+  ECS_SERVICE:      synthea-fhir-dev-fhir-service
+  CONTAINER_NAME:   hapi-fhir
+
+jobs:
+  deploy:
+    name: Build & Deploy HAPI FHIR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag and push image to ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG:    ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG \
+            ./services/fhir-server
+          docker push $ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: synthea-fhir-dev-fhir-server
+          service:         ${{ env.ECS_SERVICE }}
+          cluster:         ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
