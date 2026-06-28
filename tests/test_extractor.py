@@ -8,6 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "services" / "datamart"))
 from extractor import fetch_all, build_dm_paciente, build_dm_funcional, build_dm_episodio
 
+pytestmark = pytest.mark.unit
+
 
 def test_fetch_patients(fhir_url):
     """Debe poder obtener pacientes de HAPI FHIR."""
