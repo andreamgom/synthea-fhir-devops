@@ -2,6 +2,9 @@
 import requests
 import pytest
 
+pytestmark = pytest.mark.integration
+
+
 HEADERS = {"Accept": "application/fhir+json"}
 
 
