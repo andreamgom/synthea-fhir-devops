@@ -52,3 +52,50 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN:  ${{ secrets.SONAR_TOKEN }}
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+
+    services:
+      fhir:
+        image: hapiproject/hapi:v7.2.0
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "curl -f http://localhost:8080/fhir/metadata || exit 1"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 10
+          --health-start-period 90s
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r tests/requirements.txt
+          pip install -r services/loader/requirements.txt
+          pip install -r services/datamart/requirements.txt
+
+      - name: Load test data into FHIR
+        env:
+          FHIR_SERVER_URL: http://localhost:8080/fhir
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_DEFAULT_REGION: us-east-1
+          S3_BUCKET: synthea-fhir-dev-datalake-547c2ee6
+          S3_PREFIX: raw/fhir/
+        run: python services/loader/loader.py
+
+      - name: Run integration tests
+        env:
+          FHIR_SERVER_URL: http://localhost:8080/fhir
+        run: pytest tests/ -v --timeout=120
