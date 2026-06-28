@@ -65,9 +65,9 @@ jobs:
         options: >-
           --health-cmd "curl -f http://localhost:8080/fhir/metadata || exit 1"
           --health-interval 30s
-          --health-timeout 10s
-          --health-retries 10
-          --health-start-period 90s
+          --health-timeout 30s
+          --health-retries 20
+          --health-start-period 120s
 
     steps:
       - name: Checkout
@@ -83,6 +83,18 @@ jobs:
           pip install -r tests/requirements.txt
           pip install -r services/loader/requirements.txt
           pip install -r services/datamart/requirements.txt
+
+      - name: Wait for FHIR server
+        run: |
+          echo "Waiting for HAPI FHIR to be ready..."
+          for i in {1..30}; do
+            if curl -sf http://localhost:8080/fhir/metadata > /dev/null 2>&1; then
+              echo "FHIR server is ready!"
+              break
+            fi
+            echo "Attempt $i/30 - waiting 15 seconds..."
+            sleep 15
+          done
 
       - name: Load test data into FHIR
         env:
