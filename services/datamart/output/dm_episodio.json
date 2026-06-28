@@ -1,0 +1,970 @@
+[
+  {
+    "patient_id": "50",
+    "encounter_id": "51",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-08-15T22:41:48+01:00",
+    "fecha_fin": "2023-08-15T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "80",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-09-19T22:41:48+01:00",
+    "fecha_fin": "2023-09-19T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "97",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-11-21T21:41:48+00:00",
+    "fecha_fin": "2023-11-21T21:56:48+00:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "119",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-01-23T21:41:48+00:00",
+    "fecha_fin": "2024-01-23T21:56:48+00:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "141",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-04-23T22:41:48+01:00",
+    "fecha_fin": "2024-04-23T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "162",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-07-23T22:41:48+01:00",
+    "fecha_fin": "2024-07-23T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "177",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-10-22T22:41:48+01:00",
+    "fecha_fin": "2024-10-22T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "197",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-01-21T21:41:48+00:00",
+    "fecha_fin": "2025-01-21T21:56:48+00:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "214",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-07-22T22:41:48+01:00",
+    "fecha_fin": "2025-07-22T22:56:48+01:00"
+  },
+  {
+    "patient_id": "50",
+    "encounter_id": "232",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-01-20T21:41:48+00:00",
+    "fecha_fin": "2026-01-20T21:56:48+00:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "253",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1993-11-17T05:07:18+00:00",
+    "fecha_fin": "1993-11-17T05:22:18+00:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "260",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2005-10-08T12:07:18+01:00",
+    "fecha_fin": "2005-10-08T12:49:00+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "267",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2009-10-17T12:07:18+01:00",
+    "fecha_fin": "2009-10-17T13:00:32+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "273",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2012-10-20T12:07:18+01:00",
+    "fecha_fin": "2012-10-20T12:41:44+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "279",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2015-10-24T12:07:18+01:00",
+    "fecha_fin": "2015-10-24T12:59:39+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "291",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2017-07-03T12:07:18+01:00",
+    "fecha_fin": "2017-07-03T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "299",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-06-28T12:07:18+01:00",
+    "fecha_fin": "2018-06-28T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "307",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-10-27T12:07:18+01:00",
+    "fecha_fin": "2018-10-27T12:51:37+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "357",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-11-10T11:07:18+00:00",
+    "fecha_fin": "2018-11-10T14:33:03+00:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "377",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-06-23T12:07:18+01:00",
+    "fecha_fin": "2019-06-23T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "385",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-06-17T12:07:18+01:00",
+    "fecha_fin": "2020-06-17T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "393",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-04-24T12:07:18+01:00",
+    "fecha_fin": "2021-04-24T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "399",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-05-15T12:07:18+01:00",
+    "fecha_fin": "2021-05-15T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "405",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-06-12T12:07:18+01:00",
+    "fecha_fin": "2021-06-12T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "413",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-10-30T12:07:18+01:00",
+    "fecha_fin": "2021-10-30T13:03:32+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "469",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-11-13T11:07:18+00:00",
+    "fecha_fin": "2021-11-13T15:52:22+00:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "491",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2022-06-07T12:07:18+01:00",
+    "fecha_fin": "2022-06-07T12:32:29+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "502",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-06-02T12:32:29+01:00",
+    "fecha_fin": "2023-06-02T12:47:29+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "510",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-05-27T12:32:29+01:00",
+    "fecha_fin": "2024-05-27T13:06:53+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "521",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-11-02T11:07:18+00:00",
+    "fecha_fin": "2024-11-02T11:52:59+00:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "564",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-05-22T13:06:53+01:00",
+    "fecha_fin": "2025-05-22T13:21:53+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "574",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-05-27T04:06:53+01:00",
+    "fecha_fin": "2025-05-27T04:52:23+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "580",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-04-04T12:07:18+01:00",
+    "fecha_fin": "2026-04-04T12:22:18+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "589",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-05-22T04:52:23+01:00",
+    "fecha_fin": "2026-05-22T05:07:23+01:00"
+  },
+  {
+    "patient_id": "252",
+    "encounter_id": "597",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-06-20T12:07:18+01:00",
+    "fecha_fin": "2026-06-20T12:29:15+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "605",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-06-13T06:17:56+01:00",
+    "fecha_fin": "2023-06-13T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "634",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-07-18T06:17:56+01:00",
+    "fecha_fin": "2023-07-18T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "651",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-09-19T06:17:56+01:00",
+    "fecha_fin": "2023-09-19T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "672",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-11-10T05:17:56+00:00",
+    "fecha_fin": "2023-11-10T05:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "681",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-11-21T05:17:56+00:00",
+    "fecha_fin": "2023-11-21T05:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "702",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-12-17T18:17:56+00:00",
+    "fecha_fin": "2023-12-17T18:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "708",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-02-20T05:17:56+00:00",
+    "fecha_fin": "2024-02-20T05:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "729",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-05-21T06:17:56+01:00",
+    "fecha_fin": "2024-05-21T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "744",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-08-20T06:17:56+01:00",
+    "fecha_fin": "2024-08-20T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "764",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-11-19T05:17:56+00:00",
+    "fecha_fin": "2024-11-19T05:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "781",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-05-20T06:17:56+01:00",
+    "fecha_fin": "2025-05-20T06:32:56+01:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "798",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-11-18T05:17:56+00:00",
+    "fecha_fin": "2025-11-18T05:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "817",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-11-29T07:17:56+00:00",
+    "fecha_fin": "2025-11-29T07:32:56+00:00"
+  },
+  {
+    "patient_id": "604",
+    "encounter_id": "826",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-05-19T06:17:56+01:00",
+    "fecha_fin": "2026-05-19T06:32:56+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "848",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1991-09-11T16:55:43+01:00",
+    "fecha_fin": "1991-09-11T17:10:43+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "855",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1991-09-21T18:55:43+01:00",
+    "fecha_fin": "1991-09-21T19:34:39+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "875",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1999-11-17T08:55:43+00:00",
+    "fecha_fin": "1999-11-17T09:10:43+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "882",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2008-09-24T22:55:43+01:00",
+    "fecha_fin": "2008-09-24T23:41:29+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "889",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2012-10-03T22:55:43+01:00",
+    "fecha_fin": "2012-10-03T23:31:24+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "896",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2014-02-12T21:55:43+00:00",
+    "fecha_fin": "2014-02-12T22:10:43+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "904",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2015-02-25T21:55:43+00:00",
+    "fecha_fin": "2015-02-25T22:29:58+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "915",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2016-03-02T21:55:43+00:00",
+    "fecha_fin": "2016-03-02T22:49:17+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "929",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2017-03-08T21:55:43+00:00",
+    "fecha_fin": "2017-03-08T22:38:58+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "984",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2017-03-22T21:55:43+00:00",
+    "fecha_fin": "2017-03-23T01:14:21+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "998",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-03-14T21:55:43+00:00",
+    "fecha_fin": "2018-03-14T22:44:51+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1060",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-03-28T22:55:43+01:00",
+    "fecha_fin": "2018-03-29T01:27:43+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1074",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-03-20T21:55:43+00:00",
+    "fecha_fin": "2019-03-20T22:30:13+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1131",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-03-27T21:55:43+00:00",
+    "fecha_fin": "2019-03-27T23:02:21+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1152",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-04-10T22:55:43+01:00",
+    "fecha_fin": "2019-04-11T05:31:00+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1175",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-03-25T21:55:43+00:00",
+    "fecha_fin": "2020-03-25T22:53:03+00:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1229",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-04-08T22:55:43+01:00",
+    "fecha_fin": "2020-04-09T01:50:17+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1243",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-03-31T22:55:43+01:00",
+    "fecha_fin": "2021-03-31T23:46:52+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1290",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-06-16T22:55:43+01:00",
+    "fecha_fin": "2021-06-16T23:10:43+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1296",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-07-14T22:55:43+01:00",
+    "fecha_fin": "2021-07-14T23:10:43+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1302",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2022-04-06T22:55:43+01:00",
+    "fecha_fin": "2022-04-06T23:53:28+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1356",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2022-04-20T22:55:43+01:00",
+    "fecha_fin": "2022-04-21T02:06:38+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1370",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-04-12T22:55:43+01:00",
+    "fecha_fin": "2023-04-12T23:55:33+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1434",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-04-17T22:55:43+01:00",
+    "fecha_fin": "2024-04-17T23:45:33+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1486",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-04-23T22:55:43+01:00",
+    "fecha_fin": "2025-04-23T23:27:30+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1535",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-05-07T22:55:43+01:00",
+    "fecha_fin": "2025-05-08T01:56:54+01:00"
+  },
+  {
+    "patient_id": "847",
+    "encounter_id": "1555",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-04-29T22:55:43+01:00",
+    "fecha_fin": "2026-04-29T23:51:39+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1603",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1992-05-15T00:42:13+01:00",
+    "fecha_fin": "1992-05-15T01:58:25+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1611",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "1999-11-06T23:42:13+00:00",
+    "fecha_fin": "1999-11-07T00:25:36+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1617",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2009-11-21T23:42:13+00:00",
+    "fecha_fin": "2009-11-22T00:13:20+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1623",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2015-11-28T23:42:13+00:00",
+    "fecha_fin": "2015-11-29T00:37:20+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1629",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2015-12-20T23:42:13+00:00",
+    "fecha_fin": "2015-12-20T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1635",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2016-01-22T20:40:38+00:00",
+    "fecha_fin": "2016-01-22T20:55:38+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1643",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2017-01-16T20:40:38+00:00",
+    "fecha_fin": "2017-01-16T20:55:38+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1651",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-01-11T20:40:38+00:00",
+    "fecha_fin": "2018-01-11T20:55:38+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1659",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-05-27T10:42:13+01:00",
+    "fecha_fin": "2018-05-27T10:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1668",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-12-01T23:42:13+00:00",
+    "fecha_fin": "2018-12-02T00:28:56+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1711",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2018-12-31T23:42:13+00:00",
+    "fecha_fin": "2018-12-31T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1717",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-01-06T20:40:38+00:00",
+    "fecha_fin": "2019-01-06T20:55:38+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1725",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-03-01T23:42:13+00:00",
+    "fecha_fin": "2019-03-01T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1731",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-05-01T00:42:13+01:00",
+    "fecha_fin": "2019-05-01T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1737",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-12-07T23:42:13+00:00",
+    "fecha_fin": "2019-12-08T00:15:27+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1773",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2019-12-21T23:42:13+00:00",
+    "fecha_fin": "2019-12-22T02:55:57+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1797",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-03-07T23:42:13+00:00",
+    "fecha_fin": "2020-03-07T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1825",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-04-05T00:42:13+01:00",
+    "fecha_fin": "2020-04-05T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1833",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-05-03T00:42:13+01:00",
+    "fecha_fin": "2020-05-03T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1842",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-05-31T00:42:13+01:00",
+    "fecha_fin": "2020-05-31T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1849",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-06-28T00:42:13+01:00",
+    "fecha_fin": "2020-06-28T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1856",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-07-26T00:42:13+01:00",
+    "fecha_fin": "2020-07-26T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1868",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-08-23T00:42:13+01:00",
+    "fecha_fin": "2020-08-23T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1875",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-09-20T00:42:13+01:00",
+    "fecha_fin": "2020-09-20T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1883",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-10-04T00:42:13+01:00",
+    "fecha_fin": "2020-10-04T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1890",
+    "tipo": "EMER",
+    "estado": "finished",
+    "fecha_inicio": "2020-10-11T00:42:13+01:00",
+    "fecha_fin": "2020-10-11T01:42:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1897",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-11-21T23:42:13+00:00",
+    "fecha_fin": "2020-11-21T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1905",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-12-12T23:42:13+00:00",
+    "fecha_fin": "2020-12-13T00:14:27+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1943",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-12-26T20:40:38+00:00",
+    "fecha_fin": "2020-12-26T20:55:38+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1953",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2020-12-29T14:40:38+00:00",
+    "fecha_fin": "2020-12-29T15:21:20+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1959",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-04-18T00:42:13+01:00",
+    "fecha_fin": "2021-04-18T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1965",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-05-16T00:42:13+01:00",
+    "fecha_fin": "2021-05-16T00:57:13+01:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "1971",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-12-18T23:42:13+00:00",
+    "fecha_fin": "2021-12-19T00:18:00+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2005",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2021-12-24T15:21:20+00:00",
+    "fecha_fin": "2021-12-24T15:36:20+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2013",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2022-12-24T23:42:13+00:00",
+    "fecha_fin": "2022-12-25T00:18:55+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2044",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2022-12-31T23:42:13+00:00",
+    "fecha_fin": "2022-12-31T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2052",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-01-07T23:42:13+00:00",
+    "fecha_fin": "2023-01-08T03:27:43+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2072",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2023-12-30T23:42:13+00:00",
+    "fecha_fin": "2023-12-31T00:31:34+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2102",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-01-06T23:42:13+00:00",
+    "fecha_fin": "2024-01-06T23:57:13+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2113",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2024-01-13T23:42:13+00:00",
+    "fecha_fin": "2024-01-14T02:51:37+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2136",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-01-04T23:42:13+00:00",
+    "fecha_fin": "2025-01-05T00:14:57+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2192",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2025-12-26T23:56:01+00:00",
+    "fecha_fin": "2025-12-27T00:11:01+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2197",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-01-03T23:42:13+00:00",
+    "fecha_fin": "2026-01-04T00:47:41+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2203",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-01-10T23:42:13+00:00",
+    "fecha_fin": "2026-01-11T00:37:42+00:00"
+  },
+  {
+    "patient_id": "1602",
+    "encounter_id": "2209",
+    "tipo": "AMB",
+    "estado": "finished",
+    "fecha_inicio": "2026-01-24T23:42:13+00:00",
+    "fecha_fin": "2026-01-25T00:30:53+00:00"
+  }
+]
