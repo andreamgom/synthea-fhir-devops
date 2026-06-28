@@ -1,0 +1,47 @@
+# deploy/local/docker-compose.yml
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: synthea-postgres
+    environment:
+      POSTGRES_DB: hapifhir
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  fhir-server:
+    build:
+      context: ../../services/fhir-server
+      dockerfile: Dockerfile
+    container_name: synthea-fhir
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/hapifhir
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+      - spring.datasource.driverClassName=org.postgresql.Driver
+      - hapi.fhir.fhir_version=R4
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/fhir/metadata"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  postgres_data:
