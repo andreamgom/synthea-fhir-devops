@@ -68,6 +68,14 @@ resource "aws_ecs_task_definition" "fhir_server" {
         {
           name  = "hapi.fhir.fhir_version"
           value = "R4"
+        },
+        {
+          name  = "spring.jpa.hibernate.ddl-auto"
+          value = "update"
+        },
+        {
+          name  = "spring.jpa.properties.hibernate.hbm2ddl.auto"
+          value = "update"
         }
       ]
 
