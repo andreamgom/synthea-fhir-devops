@@ -1,7 +1,8 @@
 # services/datamart/extractor.py
-# Extrae datos de HAPI FHIR via API REST y genera datamarts en JSON
+# Extracts data from HAPI FHIR via REST API and builds neurorehab datamarts
 
 import requests
+import boto3
 import json
 import os
 import logging
@@ -13,9 +14,17 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-FHIR_URL   = os.getenv("FHIR_SERVER_URL", "http://localhost:8080/fhir")
+FHIR_URL = os.getenv("FHIR_SERVER_URL", "http://localhost:8080/fhir")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "./output")
-HEADERS    = {"Accept": "application/fhir+json"}
+
+# S3 buckets — one per datamart
+S3_DM_PACIENTE      = os.getenv("S3_DM_PACIENTE",      "")
+S3_DM_FUNCIONAL     = os.getenv("S3_DM_FUNCIONAL",     "")
+S3_DM_EPISODIO      = os.getenv("S3_DM_EPISODIO",      "")
+S3_DM_PROCEDIMIENTOS = os.getenv("S3_DM_PROCEDIMIENTOS", "")
+
+HEADERS = {"Accept": "application/fhir+json"}
 
 ESCALAS = {
     "96761-3": "Barthel index",
@@ -28,6 +37,13 @@ ESCALAS = {
     "72105-0": "Fugl-Meyer",
     "72007-8": "EuroQol VAS",
     "39156-5": "IMC"
+}
+
+PROCEDIMIENTOS = {
+    "36989003":  "Physiotherapy",
+    "386053000": "Speech therapy",
+    "410155007": "Neuropsychology",
+    "84478008":  "Occupational therapy"
 }
 
 
@@ -52,11 +68,11 @@ def build_dm_paciente(patients: list) -> list:
                 apellido = name.get("family", "")
                 nombre = (name.get("given") or [""])[0]
         rows.append({
-            "patient_id":  p.get("id"),
-            "nombre":      nombre,
-            "apellido":    apellido,
-            "genero":      p.get("gender"),
-            "fecha_nac":   p.get("birthDate")
+            "patient_id": p.get("id"),
+            "nombre":     nombre,
+            "apellido":   apellido,
+            "genero":     p.get("gender"),
+            "fecha_nac":  p.get("birthDate")
         })
     return rows
 
@@ -92,34 +108,78 @@ def build_dm_episodio(encounters: list) -> list:
     return rows
 
 
-def save(name: str, data: list):
+def build_dm_procedimientos(procedures: list) -> list:
+    rows = []
+    for proc in procedures:
+        for coding in proc.get("code", {}).get("coding", []):
+            code = coding.get("code", "")
+            if code in PROCEDIMIENTOS:
+                rows.append({
+                    "patient_id":    proc.get("subject", {}).get("reference", "").replace("Patient/", ""),
+                    "procedure_id":  proc.get("id"),
+                    "snomed_code":   code,
+                    "procedimiento": PROCEDIMIENTOS[code],
+                    "estado":        proc.get("status"),
+                    "fecha":         proc.get("performedDateTime", "")
+                })
+    return rows
+
+
+def save_local(name: str, data: list):
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
     path = f"{OUTPUT_DIR}/{name}.json"
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    log.info(f"  → {len(data)} registros guardados en {path}")
+    log.info(f"  → {len(data)} records saved locally to {path}")
+    return path
+
+
+def upload_to_s3(bucket: str, key: str, data: list):
+    if not bucket:
+        log.warning(f"  No S3 bucket configured for {key}, skipping upload")
+        return
+    s3 = boto3.client("s3", region_name=AWS_REGION)
+    s3.put_object(
+        Bucket=bucket,
+        Key=key,
+        Body=json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8"),
+        ContentType="application/json"
+    )
+    log.info(f"  → Uploaded to s3://{bucket}/{key}")
 
 
 def main():
-    log.info(f"Iniciando extractor — FHIR: {FHIR_URL}")
+    log.info(f"Starting Extractor Builder — FHIR: {FHIR_URL}")
 
-    log.info("Extrayendo pacientes...")
+    log.info("Extracting patients...")
     patients = fetch_all("Patient")
-    save("dm_paciente", build_dm_paciente(patients))
+    dm_paciente = build_dm_paciente(patients)
+    save_local("dm_paciente", dm_paciente)
+    upload_to_s3(S3_DM_PACIENTE, "dm_paciente.json", dm_paciente)
 
-    log.info("Extrayendo observaciones...")
+    log.info("Extracting observations...")
     observations = fetch_all("Observation")
-    dm_func = build_dm_funcional(observations)
-    save("dm_funcional", dm_func)
+    dm_funcional = build_dm_funcional(observations)
+    save_local("dm_funcional", dm_funcional)
+    upload_to_s3(S3_DM_FUNCIONAL, "dm_funcional.json", dm_funcional)
 
-    log.info("Extrayendo episodios...")
+    log.info("Extracting encounters...")
     encounters = fetch_all("Encounter")
-    save("dm_episodio", build_dm_episodio(encounters))
+    dm_episodio = build_dm_episodio(encounters)
+    save_local("dm_episodio", dm_episodio)
+    upload_to_s3(S3_DM_EPISODIO, "dm_episodio.json", dm_episodio)
 
-    log.info("✅ Extracción completada")
-    log.info(f"   Pacientes:    {len(patients)}")
-    log.info(f"   Escalas:      {len(dm_func)}")
-    log.info(f"   Episodios:    {len(encounters)}")
+    log.info("Extracting procedures...")
+    procedures = fetch_all("Procedure")
+    dm_procedimientos = build_dm_procedimientos(procedures)
+    save_local("dm_procedimientos", dm_procedimientos)
+    upload_to_s3(S3_DM_PROCEDIMIENTOS, "dm_procedimientos.json", dm_procedimientos)
+
+    log.info("✅ Extraction complete")
+    log.info(f"   Patients:       {len(dm_paciente)}")
+    log.info(f"   Clinical scales:{len(dm_funcional)}")
+    log.info(f"   Episodes:       {len(dm_episodio)}")
+    log.info(f"   Procedures:     {len(dm_procedimientos)}")
 
 
 if __name__ == "__main__":
