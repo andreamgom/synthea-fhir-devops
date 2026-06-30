@@ -1,0 +1,34 @@
+[
+  {
+    "patient_id": "2621",
+    "procedure_id": "2837",
+    "snomed_code": "84478008",
+    "procedimiento": "Occupational therapy",
+    "estado": "completed",
+    "fecha": ""
+  },
+  {
+    "patient_id": "2621",
+    "procedure_id": "2853",
+    "snomed_code": "84478008",
+    "procedimiento": "Occupational therapy",
+    "estado": "completed",
+    "fecha": ""
+  },
+  {
+    "patient_id": "3752",
+    "procedure_id": "3990",
+    "snomed_code": "84478008",
+    "procedimiento": "Occupational therapy",
+    "estado": "completed",
+    "fecha": ""
+  },
+  {
+    "patient_id": "14725",
+    "procedure_id": "15040",
+    "snomed_code": "386053000",
+    "procedimiento": "Speech therapy",
+    "estado": "completed",
+    "fecha": ""
+  }
+]
