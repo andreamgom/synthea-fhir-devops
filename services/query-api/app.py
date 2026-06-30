@@ -5,7 +5,7 @@ import boto3
 import json
 import os
 import logging
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from functools import lru_cache
 
 logging.basicConfig(level=logging.INFO)
@@ -41,6 +41,11 @@ def get_data(bucket: str, key: str, local_file: str) -> list:
         except Exception as e:
             log.warning(f"S3 read failed: {e}, falling back to local")
     return read_local(local_file)
+
+
+@app.route("/")
+def index():
+    return send_from_directory("static", "index.html")
 
 
 @app.route("/health")

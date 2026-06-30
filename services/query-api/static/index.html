@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurorehab FHIR Sandbox</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #2d3748; }
+        
+        header {
+            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            color: white;
+            padding: 24px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        header h1 { font-size: 1.6rem; font-weight: 600; }
+        header p { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
+        .badge {
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-top: 4px solid #2b6cb0;
+        }
+        .stat-card.green { border-top-color: #48bb78; }
+        .stat-card.orange { border-top-color: #ed8936; }
+        .stat-card.purple { border-top-color: #805ad5; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #2b6cb0; }
+        .stat-card.green .stat-number { color: #48bb78; }
+        .stat-card.orange .stat-number { color: #ed8936; }
+        .stat-card.purple .stat-number { color: #805ad5; }
+        .stat-label { font-size: 0.85rem; color: #718096; margin-top: 4px; }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a365d;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #edf2f7;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td { padding: 10px 14px; font-size: 0.88rem; border-bottom: 1px solid #f7fafc; }
+        tr:hover td { background: #f7fafc; }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag-blue { background: #bee3f8; color: #2b6cb0; }
+        .tag-green { background: #c6f6d5; color: #276749; }
+        .tag-orange { background: #feebc8; color: #c05621; }
+        .tag-purple { background: #e9d8fd; color: #553c9a; }
+
+        .patient-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        select, button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        select { flex: 1; min-width: 200px; }
+        button {
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        button:hover { background: #2c5282; }
+
+        .scale-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #2b6cb0, #48bb78);
+        }
+        .bar-val { font-size: 0.85rem; font-weight: 600; color: #2b6cb0; min-width: 40px; }
+
+        .loading { text-align: center; color: #718096; padding: 20px; }
+        .fhir-badge {
+            background: #0a6640;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>🧠 Neurorehab FHIR Sandbox</h1>
+        <p>Synthetic clinical data platform for neurorehabilitation research</p>
+    </div>
+    <span class="fhir-badge">FHIR R4</span>
+    <span class="badge" id="api-status">● Connecting...</span>
+</header>
+
+<div class="container">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="total-patients">—</div>
+            <div class="stat-label">Patients</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-number" id="total-escalas">—</div>
+            <div class="stat-label">Clinical Scale Records</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-number" id="total-episodios">—</div>
+            <div class="stat-label">Episodes</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-number" id="total-procedimientos">—</div>
+            <div class="stat-label">Therapy Sessions</div>
+        </div>
+    </div>
+
+    <!-- Patient selector -->
+    <div class="section">
+        <h2>Patient Clinical Summary</h2>
+        <div class="patient-selector">
+            <select id="patient-select">
+                <option value="">Loading patients...</option>
+            </select>
+            <button onclick="loadPatientSummary()">View Summary</button>
+        </div>
+        <div id="patient-summary"></div>
+    </div>
+
+    <!-- Patients table -->
+    <div class="section">
+        <h2>Patient Registry</h2>
+        <div id="patients-table" class="loading">Loading...</div>
+    </div>
+
+    <!-- Clinical scales -->
+    <div class="section">
+        <h2>Clinical Scales — Neurorehabilitation</h2>
+        <div id="escalas-table" class="loading">Loading...</div>
+    </div>
+
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+
+async function fetchData(endpoint) {
+    const res = await fetch(`${API}${endpoint}`);
+    return res.json();
+}
+
+async function init() {
+    try {
+        await fetchData('/health');
+        document.getElementById('api-status').textContent = '● API Online';
+        document.getElementById('api-status').style.background = '#276749';
+    } catch {
+        document.getElementById('api-status').textContent = '● API Offline';
+        document.getElementById('api-status').style.background = '#c53030';
+        return;
+    }
+
+    const [pacientes, escalas, episodios, procedimientos] = await Promise.all([
+        fetchData('/api/pacientes'),
+        fetchData('/api/escalas'),
+        fetchData('/api/episodios'),
+        fetchData('/api/procedimientos')
+    ]);
+
+    document.getElementById('total-patients').textContent = pacientes.total;
+    document.getElementById('total-escalas').textContent = escalas.total;
+    document.getElementById('total-episodios').textContent = episodios.total;
+    document.getElementById('total-procedimientos').textContent = procedimientos.total;
+
+    // Patient selector
+    const sel = document.getElementById('patient-select');
+    sel.innerHTML = '<option value="">Select a patient...</option>';
+    pacientes.data.forEach(p => {
+        sel.innerHTML += `<option value="${p.patient_id}">${p.nombre} ${p.apellido} (${p.genero}, ${p.fecha_nac})</option>`;
+    });
+
+    // Patients table
+    document.getElementById('patients-table').innerHTML = `
+        <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Gender</th><th>Birth Date</th></tr></thead>
+            <tbody>${pacientes.data.map(p => `
+                <tr>
+                    <td><span class="tag tag-blue">${p.patient_id}</span></td>
+                    <td>${p.nombre} ${p.apellido}</td>
+                    <td><span class="tag ${p.genero === 'male' ? 'tag-blue' : 'tag-purple'}">${p.genero}</span></td>
+                    <td>${p.fecha_nac || '—'}</td>
+                </tr>`).join('')}
+            </tbody>
+        </table>`;
+
+    // Scales table with bars
+    const scaleMax = { 'Barthel index': 100, 'Berg Balance Scale': 56, 'FIM': 126,
+                       'Fugl-Meyer': 100, 'EuroQol VAS': 100, 'IMC': 50,
+                       'FAC': 5, 'PASS': 36, 'FOIS': 7, 'ACE-II': 100 };
+
+    document.getElementById('escalas-table').innerHTML = `
+        <table>
+            <thead><tr><th>Patient ID</th><th>Scale</th><th>LOINC</th><th>Value</th><th>Date</th></tr></thead>
+            <tbody>${escalas.data.slice(0, 50).map(e => {
+                const max = scaleMax[e.escala] || 100;
+                const pct = Math.min((e.valor / max) * 100, 100);
+                return `<tr>
+                    <td><span class="tag tag-blue">${e.patient_id}</span></td>
+                    <td><span class="tag tag-green">${e.escala}</span></td>
+                    <td><span class="tag tag-orange">${e.loinc_code}</span></td>
+                    <td>
+                        <div class="scale-bar">
+                            <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+                            <span class="bar-val">${e.valor}</span>
+                        </div>
+                    </td>
+                    <td>${e.fecha ? e.fecha.split('T')[0] : '—'}</td>
+                </tr>`;
+            }).join('')}
+            </tbody>
+        </table>`;
+}
+
+async function loadPatientSummary() {
+    const pid = document.getElementById('patient-select').value;
+    if (!pid) return;
+    const data = await fetchData(`/api/pacientes/${pid}/resumen`);
+    const p = data.paciente;
+
+    document.getElementById('patient-summary').innerHTML = `
+        <div style="background:#edf2f7;border-radius:8px;padding:16px;margin-bottom:16px">
+            <strong>${p.nombre} ${p.apellido}</strong> &nbsp;|&nbsp;
+            ${p.genero} &nbsp;|&nbsp; Born: ${p.fecha_nac}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+            <div>
+                <strong style="color:#2b6cb0">Clinical Scales (${data.escalas.length})</strong>
+                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
+                    ${data.escalas.map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
+                        ${e.escala}: <strong>${e.valor}</strong>
+                    </li>`).join('')}
+                </ul>
+            </div>
+            <div>
+                <strong style="color:#276749">Episodes (${data.episodios.length})</strong>
+                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
+                    ${data.episodios.slice(0,5).map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
+                        ${e.fecha_inicio ? e.fecha_inicio.split('T')[0] : '—'} — <span class="tag tag-green">${e.estado}</span>
+                    </li>`).join('')}
+                </ul>
+            </div>
+            <div>
+                <strong style="color:#805ad5">Procedures (${data.procedimientos.length})</strong>
+                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
+                    ${data.procedimientos.map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
+                        <span class="tag tag-purple">${e.procedimiento}</span>
+                    </li>`).join('')}
+                </ul>
+            </div>
+        </div>`;
+}
+
+init();
+</script>
+</body>
+</html>
