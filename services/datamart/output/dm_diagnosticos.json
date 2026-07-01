@@ -1,18 +1,122 @@
 [
   {
-    "patient_id": "4214",
-    "condition_id": "4235",
-    "snomed_code": "90584004",
-    "diagnostico": "Spinal cord injury",
-    "fecha_inicio": "2014-07-14T21:28:45+01:00",
+    "patient_id": "294",
+    "condition_id": "302",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "1972-05-29T08:20:51+00:00",
     "estado": "active"
   },
   {
-    "patient_id": "11162",
-    "condition_id": "11164",
+    "patient_id": "1854",
+    "condition_id": "1856",
     "snomed_code": "128613002",
     "diagnostico": "Other neurological condition",
-    "fecha_inicio": "1979-11-29T01:56:36+00:00",
+    "fecha_inicio": "1983-10-27T12:44:32+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "1854",
+    "condition_id": "1863",
+    "snomed_code": "127295002",
+    "diagnostico": "Traumatic brain injury",
+    "fecha_inicio": "2000-11-22T12:44:32+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "2295",
+    "condition_id": "2297",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "1995-11-26T22:05:55+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "3146",
+    "condition_id": "3298",
+    "snomed_code": "422768004",
+    "diagnostico": "Minimally conscious state",
+    "fecha_inicio": "2020-08-29T17:44:10+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "3704",
+    "condition_id": "3706",
+    "snomed_code": "422768004",
+    "diagnostico": "Minimally conscious state",
+    "fecha_inicio": "2007-12-27T20:01:13+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "5130",
+    "condition_id": "5132",
+    "snomed_code": "274100004",
+    "diagnostico": "Hemorrhagic stroke",
+    "fecha_inicio": "2006-05-05T11:37:59+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "5841",
+    "condition_id": "5850",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2009-06-09T06:19:12+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "7021",
+    "condition_id": "7051",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "1979-01-26T03:08:30+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "7782",
+    "condition_id": "7784",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2006-06-30T08:01:31+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "8163",
+    "condition_id": "8545",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2024-01-06T04:55:24+00:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "22940",
+    "condition_id": "22942",
+    "snomed_code": "128613002",
+    "diagnostico": "Other neurological condition",
+    "fecha_inicio": "1992-08-21T12:19:25+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "26132",
+    "condition_id": "26175",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2008-09-17T17:15:44+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "28732",
+    "condition_id": "28740",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2016-06-12T21:24:01+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "29035",
+    "condition_id": "29037",
+    "snomed_code": "422504002",
+    "diagnostico": "Ischemic stroke",
+    "fecha_inicio": "2012-12-20T17:06:49+00:00",
     "estado": "active"
   }
 ]

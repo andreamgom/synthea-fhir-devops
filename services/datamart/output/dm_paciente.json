@@ -1,149 +1,135 @@
 [
   {
-    "patient_id": "274",
-    "nombre": "Austin578",
-    "apellido": "Weber641",
+    "patient_id": "294",
+    "nombre": "Burton124",
+    "apellido": "Kub800",
     "genero": "male",
-    "fecha_nac": "1962-10-16"
+    "fecha_nac": "1954-05-24"
   },
   {
-    "patient_id": "2067",
-    "nombre": "Austin578",
-    "apellido": "Weber641",
+    "patient_id": "1854",
+    "nombre": "Elias404",
+    "apellido": "Sporer811",
     "genero": "male",
-    "fecha_nac": "1962-10-16"
+    "fecha_nac": "1982-11-17"
   },
   {
-    "patient_id": "3792",
-    "nombre": "Bulah832",
-    "apellido": "Reichel38",
+    "patient_id": "2295",
+    "nombre": "Elsa29",
+    "apellido": "Badillo851",
     "genero": "female",
-    "fecha_nac": "2015-12-17"
+    "fecha_nac": "1977-11-20"
   },
   {
-    "patient_id": "4214",
-    "nombre": "Chong355",
-    "apellido": "McClure239",
+    "patient_id": "3146",
+    "nombre": "Ezekiel373",
+    "apellido": "Wisozk929",
     "genero": "male",
-    "fecha_nac": "1996-07-08"
+    "fecha_nac": "2002-08-24"
   },
   {
-    "patient_id": "4414",
-    "nombre": "Curt84",
-    "apellido": "Pacocha935",
+    "patient_id": "3704",
+    "nombre": "Frida746",
+    "apellido": "Abbott774",
+    "genero": "female",
+    "fecha_nac": "1989-12-21"
+  },
+  {
+    "patient_id": "4784",
+    "nombre": "Katie634",
+    "apellido": "Jast432",
+    "genero": "female",
+    "fecha_nac": "2011-01-16"
+  },
+  {
+    "patient_id": "5130",
+    "nombre": "Kimi714",
+    "apellido": "Watsica258",
+    "genero": "female",
+    "fecha_nac": "1988-04-29"
+  },
+  {
+    "patient_id": "5841",
+    "nombre": "Kina737",
+    "apellido": "Schamberger479",
+    "genero": "female",
+    "fecha_nac": "1991-06-04"
+  },
+  {
+    "patient_id": "6614",
+    "nombre": "Lamar193",
+    "apellido": "Welch179",
     "genero": "male",
-    "fecha_nac": "2017-11-15"
+    "fecha_nac": "2019-02-21"
   },
   {
-    "patient_id": "4927",
-    "nombre": "Denver542",
-    "apellido": "Klein929",
+    "patient_id": "7021",
+    "nombre": "Len277",
+    "apellido": "Russel238",
     "genero": "male",
-    "fecha_nac": "2014-06-24"
+    "fecha_nac": "1961-01-20"
   },
   {
-    "patient_id": "5545",
-    "nombre": "Emery884",
-    "apellido": "Lubowitz58",
+    "patient_id": "7782",
+    "nombre": "Leo278",
+    "apellido": "Balistreri607",
     "genero": "male",
-    "fecha_nac": "1984-10-24"
+    "fecha_nac": "1988-06-24"
   },
   {
-    "patient_id": "5811",
-    "nombre": "Eugenio846",
-    "apellido": "Hills818",
+    "patient_id": "8163",
+    "nombre": "Lilliana632",
+    "apellido": "Schultz619",
+    "genero": "female",
+    "fecha_nac": "2005-12-31"
+  },
+  {
+    "patient_id": "8745",
+    "nombre": "Mary779",
+    "apellido": "Rolfson709",
     "genero": "male",
-    "fecha_nac": "1982-05-03"
+    "fecha_nac": "2022-06-28"
   },
   {
-    "patient_id": "6603",
-    "nombre": "Gerry91",
-    "apellido": "Medhurst46",
+    "patient_id": "22940",
+    "nombre": "Porter490",
+    "apellido": "Rolfson709",
     "genero": "male",
-    "fecha_nac": "2026-06-06"
+    "fecha_nac": "1974-08-16"
   },
   {
-    "patient_id": "6634",
-    "nombre": "Jody426",
-    "apellido": "Weber641",
+    "patient_id": "26132",
+    "nombre": "Rosamond509",
+    "apellido": "Hartmann983",
+    "genero": "female",
+    "fecha_nac": "1990-09-12"
+  },
+  {
+    "patient_id": "28241",
+    "nombre": "Syreeta495",
+    "apellido": "Murray856",
+    "genero": "female",
+    "fecha_nac": "2008-11-17"
+  },
+  {
+    "patient_id": "28732",
+    "nombre": "Trent525",
+    "apellido": "Halvorson124",
     "genero": "male",
-    "fecha_nac": "1993-09-10"
+    "fecha_nac": "1998-06-07"
   },
   {
-    "patient_id": "7742",
-    "nombre": "Kum811",
-    "apellido": "Streich926",
+    "patient_id": "29035",
+    "nombre": "Tristan353",
+    "apellido": "Abernathy524",
     "genero": "female",
-    "fecha_nac": "1955-08-25"
+    "fecha_nac": "1994-12-15"
   },
   {
-    "patient_id": "8422",
-    "nombre": "Landon622",
-    "apellido": "Kshlerin58",
+    "patient_id": "29928",
+    "nombre": "Wendell199",
+    "apellido": "Walter473",
     "genero": "male",
-    "fecha_nac": "1963-07-20"
-  },
-  {
-    "patient_id": "8977",
-    "nombre": "Lawanna610",
-    "apellido": "Steuber698",
-    "genero": "female",
-    "fecha_nac": "1988-01-13"
-  },
-  {
-    "patient_id": "11162",
-    "nombre": "Leann224",
-    "apellido": "Hilll811",
-    "genero": "female",
-    "fecha_nac": "1966-09-29"
-  },
-  {
-    "patient_id": "11995",
-    "nombre": "Leticia253",
-    "apellido": "Koepp521",
-    "genero": "female",
-    "fecha_nac": "1974-11-12"
-  },
-  {
-    "patient_id": "12547",
-    "nombre": "Lynelle567",
-    "apellido": "Connelly992",
-    "genero": "female",
-    "fecha_nac": "1974-10-04"
-  },
-  {
-    "patient_id": "13535",
-    "nombre": "Marg761",
-    "apellido": "Kreiger457",
-    "genero": "female",
-    "fecha_nac": "2007-11-20"
-  },
-  {
-    "patient_id": "13956",
-    "nombre": "Margie619",
-    "apellido": "Hansen121",
-    "genero": "female",
-    "fecha_nac": "1992-01-27"
-  },
-  {
-    "patient_id": "16115",
-    "nombre": "Maricela194",
-    "apellido": "Runte676",
-    "genero": "female",
-    "fecha_nac": "2012-04-23"
-  },
-  {
-    "patient_id": "16518",
-    "nombre": "Sharie942",
-    "apellido": "Zulauf375",
-    "genero": "female",
-    "fecha_nac": "2005-03-03"
-  },
-  {
-    "patient_id": "17097",
-    "nombre": "Thora330",
-    "apellido": "Kautzer186",
-    "genero": "female",
-    "fecha_nac": "2024-07-07"
+    "fecha_nac": "2011-10-30"
   }
 ]
