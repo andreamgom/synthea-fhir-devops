@@ -6,15 +6,14 @@ on:
     branches: [main]
 
 env:
-  AWS_REGION:     us-east-1
-  ECR_FHIR_REPO:  synthea-fhir-dev-fhir-server
-  ECS_CLUSTER:    synthea-fhir-dev-cluster
-  ECS_SERVICE:    synthea-fhir-dev-fhir-service
-  CONTAINER_NAME: hapi-fhir
+  AWS_REGION:      us-east-1
+  ECS_CLUSTER:     synthea-fhir-dev-cluster
+  ECS_SERVICE:     synthea-fhir-dev-fhir-service
+  CONTAINER_NAME:  hapi-fhir
 
 jobs:
   deploy:
-    name: Build & Deploy HAPI FHIR
+    name: Build & Deploy All Services
     runs-on: ubuntu-latest
 
     steps:
@@ -33,18 +32,45 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag and push image to ECR
-        id: build-image
+      - name: Build and push HAPI FHIR image
+        id: build-fhir
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG:    ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG \
+          docker build -t $ECR_REGISTRY/synthea-fhir-dev-fhir-server:$IMAGE_TAG \
             ./services/fhir-server
-          docker push $ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_FHIR_REPO:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker push $ECR_REGISTRY/synthea-fhir-dev-fhir-server:$IMAGE_TAG
+          echo "fhir_image=$ECR_REGISTRY/synthea-fhir-dev-fhir-server:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Download task definition
+      - name: Build and push Loader image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG:    ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/synthea-fhir-dev-loader:$IMAGE_TAG \
+            ./services/loader
+          docker push $ECR_REGISTRY/synthea-fhir-dev-loader:$IMAGE_TAG
+
+      - name: Build and push Extractor image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG:    ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/synthea-fhir-dev-extractor:$IMAGE_TAG \
+            ./services/datamart
+          docker push $ECR_REGISTRY/synthea-fhir-dev-extractor:$IMAGE_TAG
+
+      - name: Build and push Query API image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG:    ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/synthea-fhir-dev-query-api:$IMAGE_TAG \
+            ./services/query-api
+          docker push $ECR_REGISTRY/synthea-fhir-dev-query-api:$IMAGE_TAG
+
+      - name: Download HAPI FHIR task definition
         run: |
           aws ecs describe-task-definition \
             --task-definition synthea-fhir-dev-fhir-server \
@@ -57,12 +83,12 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name:  ${{ env.CONTAINER_NAME }}
-          image:           ${{ steps.build-image.outputs.image }}
+          image:           ${{ steps.build-fhir.outputs.fhir_image }}
 
-      - name: Deploy to ECS
+      - name: Deploy HAPI FHIR to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition:            ${{ steps.task-def.outputs.task-definition }}
           service:                    ${{ env.ECS_SERVICE }}
           cluster:                    ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+          wait-for-service-stability: false
