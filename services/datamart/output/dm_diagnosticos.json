@@ -1,0 +1,18 @@
+[
+  {
+    "patient_id": "4214",
+    "condition_id": "4235",
+    "snomed_code": "90584004",
+    "diagnostico": "Spinal cord injury",
+    "fecha_inicio": "2014-07-14T21:28:45+01:00",
+    "estado": "active"
+  },
+  {
+    "patient_id": "11162",
+    "condition_id": "11164",
+    "snomed_code": "128613002",
+    "diagnostico": "Other neurological condition",
+    "fecha_inicio": "1979-11-29T01:56:36+00:00",
+    "estado": "active"
+  }
+]

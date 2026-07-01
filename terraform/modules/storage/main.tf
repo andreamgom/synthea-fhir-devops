@@ -89,6 +89,21 @@ resource "aws_s3_bucket_public_access_block" "dm_procedimientos" {
   restrict_public_buckets = true
 }
 
+# ── DATAMART DIAGNOSTICOS ─────────────────────────────────────────────
+resource "aws_s3_bucket" "dm_diagnosticos" {
+  bucket        = "${local.name_prefix}-dm-diagnosticos-${random_id.suffix.hex}"
+  force_destroy = true
+  tags          = { Name = "${local.name_prefix}-dm-diagnosticos" }
+}
+
+resource "aws_s3_bucket_public_access_block" "dm_diagnosticos" {
+  bucket                  = aws_s3_bucket.dm_diagnosticos.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 # ── ECR ───────────────────────────────────────────────────────────────
 resource "aws_ecr_repository" "fhir_server" {
   name                 = "${local.name_prefix}-fhir-server"

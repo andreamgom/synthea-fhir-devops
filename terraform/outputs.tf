@@ -39,3 +39,7 @@ output "dm_episodio_bucket" {
 output "dm_procedimientos_bucket" {
   value = module.storage.dm_procedimientos_bucket_name
 }
+
+output "dm_diagnosticos_bucket" {
+  value = module.storage.dm_diagnosticos_bucket_name
+}

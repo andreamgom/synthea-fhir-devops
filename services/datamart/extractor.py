@@ -23,6 +23,7 @@ S3_DM_PACIENTE      = os.getenv("S3_DM_PACIENTE",      "")
 S3_DM_FUNCIONAL     = os.getenv("S3_DM_FUNCIONAL",     "")
 S3_DM_EPISODIO      = os.getenv("S3_DM_EPISODIO",      "")
 S3_DM_PROCEDIMIENTOS = os.getenv("S3_DM_PROCEDIMIENTOS", "")
+S3_DM_DIAGNOSTICOS = os.getenv("S3_DM_DIAGNOSTICOS", "")
 
 HEADERS = {"Accept": "application/fhir+json"}
 
@@ -46,6 +47,14 @@ PROCEDIMIENTOS = {
     "84478008":  "Occupational therapy"
 }
 
+DIAGNOSTICOS_NEUROREHAB = {
+    "422504002": "Ischemic stroke",
+    "274100004": "Hemorrhagic stroke",
+    "127295002": "Traumatic brain injury",
+    "90584004":  "Spinal cord injury",
+    "422768004": "Minimally conscious state",
+    "128613002": "Other neurological condition"
+}
 
 def fetch_all(resource_type: str) -> list:
     results = []
@@ -124,6 +133,21 @@ def build_dm_procedimientos(procedures: list) -> list:
                 })
     return rows
 
+def build_dm_diagnosticos(conditions: list) -> list:
+    rows = []
+    for cond in conditions:
+        for coding in cond.get("code", {}).get("coding", []):
+            code = coding.get("code", "")
+            if code in DIAGNOSTICOS_NEUROREHAB:
+                rows.append({
+                    "patient_id":   cond.get("subject", {}).get("reference", "").replace("Patient/", ""),
+                    "condition_id": cond.get("id"),
+                    "snomed_code":  code,
+                    "diagnostico":  DIAGNOSTICOS_NEUROREHAB[code],
+                    "fecha_inicio": cond.get("onsetDateTime", ""),
+                    "estado":       cond.get("clinicalStatus", {}).get("coding", [{}])[0].get("code", "")
+                })
+    return rows
 
 def save_local(name: str, data: list):
     Path(OUTPUT_DIR).mkdir(parents=True, exist_ok=True)
@@ -174,6 +198,13 @@ def main():
     dm_procedimientos = build_dm_procedimientos(procedures)
     save_local("dm_procedimientos", dm_procedimientos)
     upload_to_s3(S3_DM_PROCEDIMIENTOS, "dm_procedimientos.json", dm_procedimientos)
+
+    log.info("Extracting conditions...")
+    conditions = fetch_all("Condition")
+    dm_diagnosticos = build_dm_diagnosticos(conditions)
+    save_local("dm_diagnosticos", dm_diagnosticos)
+    upload_to_s3(S3_DM_DIAGNOSTICOS, "dm_diagnosticos.json", dm_diagnosticos)
+    log.info(f"   Diagnoses:      {len(dm_diagnosticos)}")
 
     log.info("✅ Extraction complete")
     log.info(f"   Patients:       {len(dm_paciente)}")
