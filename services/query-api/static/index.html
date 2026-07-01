@@ -7,144 +7,164 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; color: #2d3748; }
-        
+
         header {
             background: linear-gradient(135deg, #1a365d, #2b6cb0);
             color: white;
-            padding: 24px 40px;
+            padding: 20px 40px;
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        header h1 { font-size: 1.6rem; font-weight: 600; }
-        header p { font-size: 0.9rem; opacity: 0.8; margin-top: 4px; }
-        .badge {
-            background: #48bb78;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: auto;
-        }
+        header h1 { font-size: 1.5rem; font-weight: 600; }
+        header p { font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
+        .badges { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-fhir { background: #0a6640; color: white; }
+        .badge-status { background: #276749; color: white; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 24px; }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 16px;
             text-align: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-            border-top: 4px solid #2b6cb0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-top: 3px solid #2b6cb0;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
         }
-        .stat-card.green { border-top-color: #48bb78; }
-        .stat-card.orange { border-top-color: #ed8936; }
-        .stat-card.purple { border-top-color: #805ad5; }
-        .stat-number { font-size: 2rem; font-weight: 700; color: #2b6cb0; }
-        .stat-card.green .stat-number { color: #48bb78; }
-        .stat-card.orange .stat-number { color: #ed8936; }
-        .stat-card.purple .stat-number { color: #805ad5; }
-        .stat-label { font-size: 0.85rem; color: #718096; margin-top: 4px; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .stat-card.active { border-top-width: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .stat-card.c1 { border-top-color: #2b6cb0; }
+        .stat-card.c2 { border-top-color: #c05621; }
+        .stat-card.c3 { border-top-color: #276749; }
+        .stat-card.c4 { border-top-color: #744210; }
+        .stat-card.c5 { border-top-color: #553c9a; }
+        .stat-number { font-size: 1.8rem; font-weight: 700; }
+        .c1 .stat-number { color: #2b6cb0; }
+        .c2 .stat-number { color: #c05621; }
+        .c3 .stat-number { color: #276749; }
+        .c4 .stat-number { color: #744210; }
+        .c5 .stat-number { color: #553c9a; }
+        .stat-label { font-size: 0.78rem; color: #718096; margin-top: 4px; font-weight: 500; }
+        .stat-hint { font-size: 0.7rem; color: #a0aec0; margin-top: 2px; }
 
-        .section {
+        .main-card {
             background: white;
             border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-        }
-        .section h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a365d;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2e8f0;
+            overflow: hidden;
         }
 
-        table { width: 100%; border-collapse: collapse; }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            background: #f7fafc;
+        }
+        .tab {
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #718096;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab:hover { color: #2b6cb0; background: #edf2f7; }
+        .tab.active { color: #2b6cb0; border-bottom-color: #2b6cb0; background: white; font-weight: 600; }
+        .tab-count {
+            background: #e2e8f0;
+            color: #4a5568;
+            padding: 1px 7px;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .tab.active .tab-count { background: #bee3f8; color: #2b6cb0; }
+
+        .toolbar {
+            padding: 14px 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            background: #fafafa;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            flex: 1;
+            max-width: 340px;
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 0.88rem;
+            width: 100%;
+            color: #2d3748;
+        }
+        .search-box span { color: #a0aec0; font-size: 0.9rem; }
+        .info-text { font-size: 0.8rem; color: #718096; margin-left: auto; }
+
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th {
             background: #edf2f7;
-            padding: 10px 14px;
+            padding: 10px 16px;
             text-align: left;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             color: #4a5568;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
         }
-        td { padding: 10px 14px; font-size: 0.88rem; border-bottom: 1px solid #f7fafc; }
+        td { padding: 10px 16px; border-bottom: 1px solid #f7fafc; vertical-align: middle; }
         tr:hover td { background: #f7fafc; }
+        tr:last-child td { border-bottom: none; }
 
         .tag {
             display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-size: 0.73rem;
             font-weight: 600;
+            white-space: nowrap;
         }
-        .tag-blue { background: #bee3f8; color: #2b6cb0; }
-        .tag-green { background: #c6f6d5; color: #276749; }
-        .tag-orange { background: #feebc8; color: #c05621; }
-        .tag-purple { background: #e9d8fd; color: #553c9a; }
+        .tag-blue   { background: #bee3f8; color: #1a365d; }
+        .tag-green  { background: #c6f6d5; color: #22543d; }
+        .tag-orange { background: #feebc8; color: #7b341e; }
+        .tag-purple { background: #e9d8fd; color: #44337a; }
+        .tag-red    { background: #fed7d7; color: #742a2a; }
+        .tag-gray   { background: #e2e8f0; color: #4a5568; }
 
-        .patient-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        select, button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        select { flex: 1; min-width: 200px; }
-        button {
-            background: #2b6cb0;
-            color: white;
-            border: none;
-            font-weight: 600;
-        }
-        button:hover { background: #2c5282; }
+        .bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+        .bar-bg { flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #2b6cb0, #48bb78); }
+        .bar-val { font-size: 0.82rem; font-weight: 600; color: #2b6cb0; min-width: 32px; }
 
-        .scale-bar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .bar-bg {
-            flex: 1;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #2b6cb0, #48bb78);
-        }
-        .bar-val { font-size: 0.85rem; font-weight: 600; color: #2b6cb0; min-width: 40px; }
+        .empty { text-align: center; padding: 48px; color: #a0aec0; }
+        .empty-icon { font-size: 2rem; margin-bottom: 8px; }
 
-        .loading { text-align: center; color: #718096; padding: 20px; }
-        .fhir-badge {
-            background: #0a6640;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
+        .panel { display: none; }
+        .panel.active { display: block; }
     </style>
 </head>
 <body>
@@ -152,177 +172,339 @@
 <header>
     <div>
         <h1>🧠 Neurorehab FHIR Sandbox</h1>
-        <p>Synthetic clinical data platform for neurorehabilitation research</p>
+        <p>Synthetic clinical data platform · FHIR R4 · Extractor Query API</p>
     </div>
-    <span class="fhir-badge">FHIR R4</span>
-    <span class="badge" id="api-status">● Connecting...</span>
+    <div class="badges">
+        <span class="badge badge-fhir">FHIR R4</span>
+        <span class="badge badge-status" id="api-status">⬤ Connecting...</span>
+    </div>
 </header>
 
 <div class="container">
 
-    <!-- Stats -->
     <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-number" id="total-patients">—</div>
+        <div class="stat-card c1 active" onclick="switchTab('pacientes')">
+            <div class="stat-number" id="n-pacientes">—</div>
             <div class="stat-label">Patients</div>
+            <div class="stat-hint">dm_paciente</div>
         </div>
-        <div class="stat-card green">
-            <div class="stat-number" id="total-escalas">—</div>
-            <div class="stat-label">Clinical Scale Records</div>
+        <div class="stat-card c2" onclick="switchTab('diagnosticos')">
+            <div class="stat-number" id="n-diagnosticos">—</div>
+            <div class="stat-label">Diagnoses</div>
+            <div class="stat-hint">dm_diagnosticos</div>
         </div>
-        <div class="stat-card orange">
-            <div class="stat-number" id="total-episodios">—</div>
+        <div class="stat-card c3" onclick="switchTab('escalas')">
+            <div class="stat-number" id="n-escalas">—</div>
+            <div class="stat-label">Clinical Scales</div>
+            <div class="stat-hint">dm_funcional</div>
+        </div>
+        <div class="stat-card c4" onclick="switchTab('episodios')">
+            <div class="stat-number" id="n-episodios">—</div>
             <div class="stat-label">Episodes</div>
+            <div class="stat-hint">dm_episodio</div>
         </div>
-        <div class="stat-card purple">
-            <div class="stat-number" id="total-procedimientos">—</div>
+        <div class="stat-card c5" onclick="switchTab('procedimientos')">
+            <div class="stat-number" id="n-procedimientos">—</div>
             <div class="stat-label">Therapy Sessions</div>
+            <div class="stat-hint">dm_procedimientos</div>
         </div>
     </div>
 
-    <!-- Patient selector -->
-    <div class="section">
-        <h2>Patient Clinical Summary</h2>
-        <div class="patient-selector">
-            <select id="patient-select">
-                <option value="">Loading patients...</option>
-            </select>
-            <button onclick="loadPatientSummary()">View Summary</button>
+    <div class="main-card">
+        <div class="tabs">
+            <div class="tab active" id="tab-pacientes" onclick="switchTab('pacientes')">
+                👤 Patients <span class="tab-count" id="tc-pacientes">—</span>
+            </div>
+            <div class="tab" id="tab-diagnosticos" onclick="switchTab('diagnosticos')">
+                🏥 Diagnoses <span class="tab-count" id="tc-diagnosticos">—</span>
+            </div>
+            <div class="tab" id="tab-escalas" onclick="switchTab('escalas')">
+                📊 Clinical Scales <span class="tab-count" id="tc-escalas">—</span>
+            </div>
+            <div class="tab" id="tab-episodios" onclick="switchTab('episodios')">
+                📅 Episodes <span class="tab-count" id="tc-episodios">—</span>
+            </div>
+            <div class="tab" id="tab-procedimientos" onclick="switchTab('procedimientos')">
+                💊 Procedures <span class="tab-count" id="tc-procedimientos">—</span>
+            </div>
         </div>
-        <div id="patient-summary"></div>
-    </div>
 
-    <!-- Patients table -->
-    <div class="section">
-        <h2>Patient Registry</h2>
-        <div id="patients-table" class="loading">Loading...</div>
-    </div>
+        <div class="toolbar">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="search-input" placeholder="Search by Patient ID or name..." oninput="filterTable()">
+            </div>
+            <span class="info-text" id="row-count"></span>
+        </div>
 
-    <!-- Clinical scales -->
-    <div class="section">
-        <h2>Clinical Scales — Neurorehabilitation</h2>
-        <div id="escalas-table" class="loading">Loading...</div>
-    </div>
+        <!-- PACIENTES -->
+        <div class="panel active" id="panel-pacientes">
+            <div class="table-wrapper">
+                <table id="table-pacientes">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Birth Date</th>
+                            <th>Neurorehab</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
+        <!-- DIAGNOSTICOS -->
+        <div class="panel" id="panel-diagnosticos">
+            <div class="table-wrapper">
+                <table id="table-diagnosticos">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Diagnosis</th>
+                            <th>SNOMED Code</th>
+                            <th>Onset Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ESCALAS -->
+        <div class="panel" id="panel-escalas">
+            <div class="table-wrapper">
+                <table id="table-escalas">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Scale</th>
+                            <th>LOINC Code</th>
+                            <th>Value</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- EPISODIOS -->
+        <div class="panel" id="panel-episodios">
+            <div class="table-wrapper">
+                <table id="table-episodios">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Episode ID</th>
+                            <th>Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROCEDIMIENTOS -->
+        <div class="panel" id="panel-procedimientos">
+            <div class="table-wrapper">
+                <table id="table-procedimientos">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Procedure</th>
+                            <th>SNOMED Code</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 const API = 'http://localhost:5000';
+let allData = {};
+let currentTab = 'pacientes';
+
+const SCALE_MAX = {
+    'Barthel index': 100, 'Berg Balance Scale': 56, 'FIM': 126,
+    'Fugl-Meyer': 100, 'EuroQol VAS': 100, 'IMC': 50,
+    'FAC': 5, 'PASS': 36, 'FOIS': 7, 'ACE-II': 100
+};
 
 async function fetchData(endpoint) {
     const res = await fetch(`${API}${endpoint}`);
     return res.json();
 }
 
+function tag(text, cls) {
+    return `<span class="tag ${cls}">${text}</span>`;
+}
+
+function bar(value, scale) {
+    const max = SCALE_MAX[scale] || 100;
+    const pct = Math.min((value / max) * 100, 100);
+    return `<div class="bar-wrap">
+        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <span class="bar-val">${value}</span>
+    </div>`;
+}
+
+function date(str) {
+    return str ? str.split('T')[0] : '—';
+}
+
 async function init() {
     try {
         await fetchData('/health');
-        document.getElementById('api-status').textContent = '● API Online';
-        document.getElementById('api-status').style.background = '#276749';
+        document.getElementById('api-status').textContent = '⬤ API Online';
     } catch {
-        document.getElementById('api-status').textContent = '● API Offline';
+        document.getElementById('api-status').textContent = '⬤ API Offline';
         document.getElementById('api-status').style.background = '#c53030';
         return;
     }
 
-    const [pacientes, escalas, episodios, procedimientos] = await Promise.all([
+    const [pac, diag, esc, epi, proc] = await Promise.all([
         fetchData('/api/pacientes'),
+        fetchData('/api/diagnosticos'),
         fetchData('/api/escalas'),
         fetchData('/api/episodios'),
         fetchData('/api/procedimientos')
     ]);
 
-    document.getElementById('total-patients').textContent = pacientes.total;
-    document.getElementById('total-escalas').textContent = escalas.total;
-    document.getElementById('total-episodios').textContent = episodios.total;
-    document.getElementById('total-procedimientos').textContent = procedimientos.total;
+    allData = {
+        pacientes: pac.data,
+        diagnosticos: diag.data,
+        escalas: esc.data,
+        episodios: epi.data,
+        procedimientos: proc.data
+    };
 
-    // Patient selector
-    const sel = document.getElementById('patient-select');
-    sel.innerHTML = '<option value="">Select a patient...</option>';
-    pacientes.data.forEach(p => {
-        sel.innerHTML += `<option value="${p.patient_id}">${p.nombre} ${p.apellido} (${p.genero}, ${p.fecha_nac})</option>`;
-    });
+    const neuroIds = new Set(diag.data.map(d => d.patient_id));
 
-    // Patients table
-    document.getElementById('patients-table').innerHTML = `
-        <table>
-            <thead><tr><th>ID</th><th>Name</th><th>Gender</th><th>Birth Date</th></tr></thead>
-            <tbody>${pacientes.data.map(p => `
-                <tr>
-                    <td><span class="tag tag-blue">${p.patient_id}</span></td>
-                    <td>${p.nombre} ${p.apellido}</td>
-                    <td><span class="tag ${p.genero === 'male' ? 'tag-blue' : 'tag-purple'}">${p.genero}</span></td>
-                    <td>${p.fecha_nac || '—'}</td>
-                </tr>`).join('')}
-            </tbody>
-        </table>`;
+    // Stats
+    document.getElementById('n-pacientes').textContent = pac.total;
+    document.getElementById('n-diagnosticos').textContent = diag.total;
+    document.getElementById('n-escalas').textContent = esc.total;
+    document.getElementById('n-episodios').textContent = epi.total;
+    document.getElementById('n-procedimientos').textContent = proc.total;
+    document.getElementById('tc-pacientes').textContent = pac.total;
+    document.getElementById('tc-diagnosticos').textContent = diag.total;
+    document.getElementById('tc-escalas').textContent = esc.total;
+    document.getElementById('tc-episodios').textContent = epi.total;
+    document.getElementById('tc-procedimientos').textContent = proc.total;
 
-    // Scales table with bars
-    const scaleMax = { 'Barthel index': 100, 'Berg Balance Scale': 56, 'FIM': 126,
-                       'Fugl-Meyer': 100, 'EuroQol VAS': 100, 'IMC': 50,
-                       'FAC': 5, 'PASS': 36, 'FOIS': 7, 'ACE-II': 100 };
-
-    document.getElementById('escalas-table').innerHTML = `
-        <table>
-            <thead><tr><th>Patient ID</th><th>Scale</th><th>LOINC</th><th>Value</th><th>Date</th></tr></thead>
-            <tbody>${escalas.data.slice(0, 50).map(e => {
-                const max = scaleMax[e.escala] || 100;
-                const pct = Math.min((e.valor / max) * 100, 100);
-                return `<tr>
-                    <td><span class="tag tag-blue">${e.patient_id}</span></td>
-                    <td><span class="tag tag-green">${e.escala}</span></td>
-                    <td><span class="tag tag-orange">${e.loinc_code}</span></td>
-                    <td>
-                        <div class="scale-bar">
-                            <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
-                            <span class="bar-val">${e.valor}</span>
-                        </div>
-                    </td>
-                    <td>${e.fecha ? e.fecha.split('T')[0] : '—'}</td>
-                </tr>`;
-            }).join('')}
-            </tbody>
-        </table>`;
+    // Render tables
+    renderPacientes(pac.data, neuroIds);
+    renderDiagnosticos(diag.data);
+    renderEscalas(esc.data);
+    renderEpisodios(epi.data);
+    renderProcedimientos(proc.data);
+    updateRowCount();
 }
 
-async function loadPatientSummary() {
-    const pid = document.getElementById('patient-select').value;
-    if (!pid) return;
-    const data = await fetchData(`/api/pacientes/${pid}/resumen`);
-    const p = data.paciente;
+function renderPacientes(data, neuroIds) {
+    document.querySelector('#table-pacientes tbody').innerHTML = data.map(p => `
+        <tr data-search="${p.patient_id} ${p.nombre} ${p.apellido}">
+            <td>${tag(p.patient_id, 'tag-blue')}</td>
+            <td>${p.nombre}</td>
+            <td><strong>${p.apellido}</strong></td>
+            <td>${tag(p.genero === 'male' ? '♂ Male' : '♀ Female', p.genero === 'male' ? 'tag-blue' : 'tag-purple')}</td>
+            <td>${p.fecha_nac || '—'}</td>
+            <td>${neuroIds.has(p.patient_id) ? tag('✓ Neurorehab', 'tag-green') : tag('General', 'tag-gray')}</td>
+        </tr>`).join('');
+}
 
-    document.getElementById('patient-summary').innerHTML = `
-        <div style="background:#edf2f7;border-radius:8px;padding:16px;margin-bottom:16px">
-            <strong>${p.nombre} ${p.apellido}</strong> &nbsp;|&nbsp;
-            ${p.genero} &nbsp;|&nbsp; Born: ${p.fecha_nac}
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-            <div>
-                <strong style="color:#2b6cb0">Clinical Scales (${data.escalas.length})</strong>
-                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
-                    ${data.escalas.map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
-                        ${e.escala}: <strong>${e.valor}</strong>
-                    </li>`).join('')}
-                </ul>
-            </div>
-            <div>
-                <strong style="color:#276749">Episodes (${data.episodios.length})</strong>
-                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
-                    ${data.episodios.slice(0,5).map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
-                        ${e.fecha_inicio ? e.fecha_inicio.split('T')[0] : '—'} — <span class="tag tag-green">${e.estado}</span>
-                    </li>`).join('')}
-                </ul>
-            </div>
-            <div>
-                <strong style="color:#805ad5">Procedures (${data.procedimientos.length})</strong>
-                <ul style="margin-top:8px;font-size:0.85rem;list-style:none">
-                    ${data.procedimientos.map(e => `<li style="padding:4px 0;border-bottom:1px solid #e2e8f0">
-                        <span class="tag tag-purple">${e.procedimiento}</span>
-                    </li>`).join('')}
-                </ul>
-            </div>
-        </div>`;
+function renderDiagnosticos(data) {
+    document.querySelector('#table-diagnosticos tbody').innerHTML = data.length
+        ? data.map(d => `
+            <tr data-search="${d.patient_id} ${d.diagnostico}">
+                <td>${tag(d.patient_id, 'tag-blue')}</td>
+                <td><strong>${d.diagnostico}</strong></td>
+                <td>${tag(d.snomed_code, 'tag-orange')}</td>
+                <td>${date(d.fecha_inicio)}</td>
+                <td>${tag(d.estado || 'active', 'tag-green')}</td>
+            </tr>`).join('')
+        : '<tr><td colspan="5" class="empty"><div class="empty-icon">🏥</div>No neurorehab diagnoses found</td></tr>';
+}
+
+function renderEscalas(data) {
+    document.querySelector('#table-escalas tbody').innerHTML = data.map(e => `
+        <tr data-search="${e.patient_id} ${e.escala}">
+            <td>${tag(e.patient_id, 'tag-blue')}</td>
+            <td>${tag(e.escala, 'tag-green')}</td>
+            <td>${tag(e.loinc_code, 'tag-orange')}</td>
+            <td>${bar(e.valor, e.escala)}</td>
+            <td>${date(e.fecha)}</td>
+        </tr>`).join('');
+}
+
+function renderEpisodios(data) {
+    document.querySelector('#table-episodios tbody').innerHTML = data.map(e => `
+        <tr data-search="${e.patient_id} ${e.encounter_id}">
+            <td>${tag(e.patient_id, 'tag-blue')}</td>
+            <td>${tag(e.encounter_id, 'tag-gray')}</td>
+            <td>${tag(e.tipo || '—', 'tag-orange')}</td>
+            <td>${date(e.fecha_inicio)}</td>
+            <td>${date(e.fecha_fin)}</td>
+            <td>${tag(e.estado, e.estado === 'finished' ? 'tag-green' : 'tag-orange')}</td>
+        </tr>`).join('');
+}
+
+function renderProcedimientos(data) {
+    document.querySelector('#table-procedimientos tbody').innerHTML = data.length
+        ? data.map(p => `
+            <tr data-search="${p.patient_id} ${p.procedimiento}">
+                <td>${tag(p.patient_id, 'tag-blue')}</td>
+                <td><strong>${p.procedimiento}</strong></td>
+                <td>${tag(p.snomed_code, 'tag-orange')}</td>
+                <td>${date(p.fecha)}</td>
+                <td>${tag(p.estado || '—', 'tag-green')}</td>
+            </tr>`).join('')
+        : '<tr><td colspan="5" class="empty"><div class="empty-icon">💊</div>No therapy sessions found</td></tr>';
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+    document.getElementById('search-input').value = '';
+    filterTable();
+}
+
+function filterTable() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const rows = document.querySelectorAll(`#panel-${currentTab} tr[data-search]`);
+    let visible = 0;
+    rows.forEach(r => {
+        const match = r.dataset.search.toLowerCase().includes(q);
+        r.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    updateRowCount(visible, rows.length);
+}
+
+function updateRowCount(visible, total) {
+    const el = document.getElementById('row-count');
+    if (visible !== undefined) {
+        el.textContent = visible === total ? `${total} records` : `${visible} of ${total} records`;
+    } else {
+        const rows = document.querySelectorAll(`#panel-${currentTab} tr[data-search]`);
+        el.textContent = `${rows.length} records`;
+    }
 }
 
 init();

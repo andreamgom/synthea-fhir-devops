@@ -21,27 +21,19 @@ services:
       retries: 5
 
   fhir-server:
-    build:
-      context: ../../services/fhir-server
-      dockerfile: Dockerfile
+    image: hapiproject/hapi:v7.2.0
     container_name: synthea-fhir
     ports:
       - "8080:8080"
     environment:
-      - spring.datasource.url=jdbc:postgresql://postgres:5432/hapifhir
-      - spring.datasource.username=postgres
-      - spring.datasource.password=postgres
-      - spring.datasource.driverClassName=org.postgresql.Driver
-      - hapi.fhir.fhir_version=R4
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - management.endpoints.web.exposure.include=prometheus,health,info
+      - management.endpoint.prometheus.enabled=true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/fhir/metadata"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/fhir/metadata || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 10
-      start_period: 60s
+      start_period: 90s
 
 volumes:
   postgres_data:
