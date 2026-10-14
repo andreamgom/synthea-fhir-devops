@@ -2,14 +2,13 @@
 import pytest
 import sys
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 pytestmark = pytest.mark.unit
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "services" / "datamart"))
-from extractor import build_dm_paciente, build_dm_funcional, build_dm_episodio
+from extractor import build_dm_paciente, build_dm_funcional, build_dm_episodio, build_dm_procedimientos, build_dm_diagnosticos
 
-# Datos de prueba — no necesitan FHIR corriendo
 MOCK_PATIENTS = [
     {
         "id": "patient-001",
@@ -46,9 +45,28 @@ MOCK_ENCOUNTERS = [
     }
 ]
 
+MOCK_PROCEDURES = [
+    {
+        "id": "proc-001",
+        "subject": {"reference": "Patient/patient-001"},
+        "code": {"coding": [{"code": "36989003", "display": "Physiotherapy"}]},
+        "status": "completed",
+        "performedDateTime": "2024-01-20"
+    }
+]
+
+MOCK_CONDITIONS = [
+    {
+        "id": "cond-001",
+        "subject": {"reference": "Patient/patient-001"},
+        "code": {"coding": [{"code": "422504002", "display": "Ischemic stroke"}]},
+        "onsetDateTime": "2024-01-01",
+        "clinicalStatus": {"coding": [{"code": "active"}]}
+    }
+]
+
 
 def test_build_dm_paciente_structure():
-    """dm_paciente debe tener los campos correctos."""
     dm = build_dm_paciente(MOCK_PATIENTS)
     assert len(dm) == 1
     row = dm[0]
@@ -59,7 +77,6 @@ def test_build_dm_paciente_structure():
 
 
 def test_build_dm_funcional_filters_loinc():
-    """dm_funcional debe filtrar solo escalas neurorehab."""
     dm = build_dm_funcional(MOCK_OBSERVATIONS)
     assert len(dm) == 2
     codes = [r["loinc_code"] for r in dm]
@@ -68,7 +85,6 @@ def test_build_dm_funcional_filters_loinc():
 
 
 def test_build_dm_funcional_fields():
-    """dm_funcional debe tener los campos correctos."""
     dm = build_dm_funcional(MOCK_OBSERVATIONS)
     for row in dm:
         assert "patient_id" in row
@@ -78,7 +94,6 @@ def test_build_dm_funcional_fields():
 
 
 def test_build_dm_episodio_structure():
-    """dm_episodio debe tener los campos correctos."""
     dm = build_dm_episodio(MOCK_ENCOUNTERS)
     assert len(dm) == 1
     row = dm[0]
@@ -87,15 +102,41 @@ def test_build_dm_episodio_structure():
     assert row["estado"] == "finished"
 
 
+def test_build_dm_procedimientos_filters_snomed():
+    dm = build_dm_procedimientos(MOCK_PROCEDURES)
+    assert len(dm) == 1
+    assert dm[0]["procedimiento"] == "Physiotherapy"
+    assert dm[0]["snomed_code"] == "36989003"
+
+
+def test_build_dm_diagnosticos_filters_snomed():
+    dm = build_dm_diagnosticos(MOCK_CONDITIONS)
+    assert len(dm) == 1
+    assert dm[0]["diagnostico"] == "Ischemic stroke"
+    assert dm[0]["snomed_code"] == "422504002"
+    assert dm[0]["patient_id"] == "patient-001"
+
+
+def test_build_dm_diagnosticos_ignores_non_neurorehab():
+    conditions_no_neuro = [
+        {
+            "id": "cond-999",
+            "subject": {"reference": "Patient/patient-001"},
+            "code": {"coding": [{"code": "99999-9", "display": "Other condition"}]},
+            "onsetDateTime": "2024-01-01"
+        }
+    ]
+    dm = build_dm_diagnosticos(conditions_no_neuro)
+    assert len(dm) == 0
+
+
 def test_build_dm_funcional_ignores_non_neurorehab():
-    """dm_funcional debe ignorar observaciones que no son escalas neurorehab."""
     obs_no_neuro = [
         {
             "id": "obs-999",
             "subject": {"reference": "Patient/patient-001"},
-            "code": {"coding": [{"code": "99999-9", "display": "Otra escala"}]},
-            "valueQuantity": {"value": 50},
-            "effectiveDateTime": "2024-01-15"
+            "code": {"coding": [{"code": "99999-9", "display": "Other scale"}]},
+            "valueQuantity": {"value": 50}
         }
     ]
     dm = build_dm_funcional(obs_no_neuro)
@@ -103,6 +144,5 @@ def test_build_dm_funcional_ignores_non_neurorehab():
 
 
 def test_build_dm_paciente_empty():
-    """dm_paciente con lista vacía debe devolver lista vacía."""
     dm = build_dm_paciente([])
     assert dm == []

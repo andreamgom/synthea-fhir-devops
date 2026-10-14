@@ -1,18 +1,15 @@
 # terraform/outputs.tf
 
 output "aws_region" {
-  description = "Región AWS usada"
-  value       = var.aws_region
+  value = var.aws_region
 }
 
 output "lab_role_arn" {
-  description = "ARN del LabRole usado para ECS tasks en Academy"
-  value       = var.lab_role_arn
+  value = var.lab_role_arn
 }
 
 output "rds_endpoint" {
-  description = "Endpoint RDS para configurar HAPI FHIR"
-  value       = module.database.endpoint
+  value = module.database.endpoint
 }
 
 output "ecs_cluster_name" {
@@ -23,19 +20,38 @@ output "fhir_task_definition_arn" {
   value = module.compute.fhir_task_definition_arn
 }
 
-# output "github_actions_access_key_id" {
-#   value     = module.iam.github_actions_access_key_id
-#   sensitive = true
-# }
+output "query_api_task_definition_arn" {
+  value = module.compute.query_api_task_definition_arn
+}
 
-# output "github_actions_secret_access_key" {
-#   value     = module.iam.github_actions_secret_access_key
-#   sensitive = true
-# }
+output "fhir_datalake_bucket" {
+  value = module.storage.fhir_datalake_bucket_name
+}
 
+output "dm_paciente_bucket" {
+  value = module.storage.dm_paciente_bucket_name
+}
 
-# Se irán añadiendo outputs de cada módulo conforme se creen:
-# output "vpc_id"             { value = module.networking.vpc_id }
-# output "s3_datalake_bucket" { value = module.storage.bucket_name }
-# output "ecs_cluster_name"   { value = module.compute.cluster_name }
-# output "rds_endpoint"       { value = module.database.endpoint }
+output "dm_funcional_bucket" {
+  value = module.storage.dm_funcional_bucket_name
+}
+
+output "dm_episodio_bucket" {
+  value = module.storage.dm_episodio_bucket_name
+}
+
+output "dm_procedimientos_bucket" {
+  value = module.storage.dm_procedimientos_bucket_name
+}
+
+output "dm_diagnosticos_bucket" {
+  value = module.storage.dm_diagnosticos_bucket_name
+}
+
+output "loader_trigger_queue_url" {
+  value = module.storage.loader_trigger_queue_url
+}
+
+output "extractor_trigger_queue_url" {
+  value = module.storage.extractor_trigger_queue_url
+}

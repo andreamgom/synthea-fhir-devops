@@ -1,16 +1,15 @@
-<<<<<<< HEAD
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup
-terraform/terraform.tfvars
-terraform/*.tfvars
-services/synthea/.git
-=======
 # Terraform
 terraform/.terraform/
 terraform/*.tfstate
 terraform/*.tfstate.backup
-terraform/.terraform.lock.hcl
 terraform/terraform.tfvars
 terraform/*.tfvars
->>>>>>> develop
+terraform/tfplan
+
+# Synthea
+services/synthea/.git
+
+# Python
+**/__pycache__/
+*.pyc
+services/datamart/output/
