@@ -4,19 +4,35 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # Botón manual: GitHub -> Actions -> Deploy -> Run workflow.
+  # Despliega y, si se pide, sube los pacientes y verifica los datamarts.
+  workflow_dispatch:
+    inputs:
+      subir_pacientes:
+        description: "Subir los pacientes de data/sample-fhir y verificar los datamarts (solo con HAPI vacía: los pacientes no son idempotentes y se duplicarían)"
+        type: boolean
+        default: false
 
 env:
   AWS_REGION:      us-east-1
   ECS_CLUSTER:     synthea-fhir-dev-cluster
   ECS_SERVICE:     synthea-fhir-dev-fhir-service
   CONTAINER_NAME:  hapi-fhir
+  PREFIX:          synthea-fhir-dev
+  MIN_PACIENTES:   "19"
 
 jobs:
   deploy:
     name: Build & Deploy All Services
     runs-on: ubuntu-latest
+    outputs:
+      start_ms: ${{ steps.t.outputs.start_ms }}
 
     steps:
+      - name: Marca de inicio
+        id: t
+        run: echo "start_ms=$(date +%s%3N)" >> $GITHUB_OUTPUT
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -51,6 +67,8 @@ jobs:
           docker build -t $ECR_REGISTRY/synthea-fhir-dev-loader:$IMAGE_TAG \
             ./services/loader
           docker push $ECR_REGISTRY/synthea-fhir-dev-loader:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/synthea-fhir-dev-loader:$IMAGE_TAG $ECR_REGISTRY/synthea-fhir-dev-loader:latest
+          docker push $ECR_REGISTRY/synthea-fhir-dev-loader:latest
 
       - name: Build and push Extractor image
         env:
@@ -60,6 +78,8 @@ jobs:
           docker build -t $ECR_REGISTRY/synthea-fhir-dev-extractor:$IMAGE_TAG \
             ./services/datamart
           docker push $ECR_REGISTRY/synthea-fhir-dev-extractor:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/synthea-fhir-dev-extractor:$IMAGE_TAG $ECR_REGISTRY/synthea-fhir-dev-extractor:latest
+          docker push $ECR_REGISTRY/synthea-fhir-dev-extractor:latest
 
       - name: Build and push Query API image
         env:
@@ -69,6 +89,8 @@ jobs:
           docker build -t $ECR_REGISTRY/synthea-fhir-dev-query-api:$IMAGE_TAG \
             ./services/query-api
           docker push $ECR_REGISTRY/synthea-fhir-dev-query-api:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/synthea-fhir-dev-query-api:$IMAGE_TAG $ECR_REGISTRY/synthea-fhir-dev-query-api:latest
+          docker push $ECR_REGISTRY/synthea-fhir-dev-query-api:latest
 
       - name: Download HAPI FHIR task definition
         run: |
@@ -92,3 +114,146 @@ jobs:
           service:                    ${{ env.ECS_SERVICE }}
           cluster:                    ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: false
+
+      # Loader, extractor y query-api no usan render-task-definition porque
+      # sus task definitions ya apuntan de forma fija a la etiqueta :latest
+      # (ver terraform/modules/compute/main.tf). Basta con forzar un nuevo
+      # despliegue para que ECS arranque tareas con la imagen recién subida.
+      - name: Deploy Loader to ECS
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service synthea-fhir-dev-loader-service \
+            --force-new-deployment
+
+      - name: Deploy Extractor to ECS
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service synthea-fhir-dev-extractor-service \
+            --force-new-deployment
+
+      - name: Deploy Query API to ECS
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service synthea-fhir-dev-query-api-service \
+            --force-new-deployment
+
+  # Comprobación de extremo a extremo: HAPI FHIR arrancado de verdad, pacientes
+  # cargados y datamarts generados.
+  verify:
+    name: Verify (HAPI, pacientes y datamarts)
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ env.AWS_REGION }}
+
+      - name: Wait for the 4 services to be stable
+        run: |
+          aws ecs wait services-stable --cluster $ECS_CLUSTER --services \
+            $PREFIX-fhir-service $PREFIX-loader-service \
+            $PREFIX-extractor-service $PREFIX-query-api-service
+          aws ecs describe-services --cluster $ECS_CLUSTER --services \
+            $PREFIX-fhir-service $PREFIX-loader-service \
+            $PREFIX-extractor-service $PREFIX-query-api-service \
+            --query "services[].[serviceName,runningCount,desiredCount]" --output table
+
+      # HAPI FHIR es el punto delicado (PostgreSQL de RDS): se comprueba en sus
+      # logs que ha arrancado y no solo que el contenedor está vivo.
+      - name: Check HAPI FHIR has really started
+        run: |
+          start="${{ needs.deploy.outputs.start_ms }}"
+          for i in $(seq 1 40); do
+            n=$(aws logs filter-log-events --log-group-name /ecs/$PREFIX-fhir-server \
+                  --start-time "$start" --filter-pattern '"Started Application"' \
+                  --query 'length(events)' --output text)
+            if [ "$n" != "0" ] && [ "$n" != "None" ]; then
+              echo "HAPI FHIR started."
+              exit 0
+            fi
+            echo "Waiting for HAPI FHIR... ($i/40)"
+            sleep 15
+          done
+          echo "::error::HAPI FHIR did not start. Latest errors:"
+          aws logs filter-log-events --log-group-name /ecs/$PREFIX-fhir-server \
+            --start-time "$start" --filter-pattern 'ERROR' \
+            --query 'events[-15:].message' --output text || true
+          exit 1
+
+      - name: Find buckets
+        if: ${{ inputs.subir_pacientes }}
+        run: |
+          find_bucket() {
+            aws s3api list-buckets \
+              --query "Buckets[?starts_with(Name, '$PREFIX-$1-')].Name | [0]" --output text
+          }
+          echo "DATALAKE=$(find_bucket fhir-datalake)"    >> $GITHUB_ENV
+          echo "DM_PACIENTE=$(find_bucket dm-paciente)"   >> $GITHUB_ENV
+          echo "DM_FUNCIONAL=$(find_bucket dm-funcional)" >> $GITHUB_ENV
+          echo "DM_EPISODIO=$(find_bucket dm-episodio)"   >> $GITHUB_ENV
+          echo "DM_PROC=$(find_bucket dm-procedimientos)" >> $GITHUB_ENV
+          echo "DM_DIAG=$(find_bucket dm-diagnosticos)"   >> $GITHUB_ENV
+
+      - name: Upload hospital and practitioners first (patients reference them)
+        if: ${{ inputs.subir_pacientes }}
+        run: |
+          aws s3 cp data/sample-fhir/ "s3://$DATALAKE/raw/fhir/" --recursive \
+            --exclude "*" --include "hospitalInformation*" --include "practitionerInformation*"
+          sleep 60
+
+      - name: Upload patients
+        if: ${{ inputs.subir_pacientes }}
+        run: |
+          # Ninfa662 (bundle de ~38 MB) se excluye: supera el timeout de carga del
+          # loader y los reintentos acabarían duplicándola en HAPI.
+          aws s3 cp data/sample-fhir/ "s3://$DATALAKE/raw/fhir/" --recursive \
+            --exclude "hospitalInformation*" --exclude "practitionerInformation*" \
+            --exclude "Ninfa662*"
+
+      - name: Wait for datamarts and check the result
+        if: ${{ inputs.subir_pacientes }}
+        run: |
+          count() {  # $1 = bucket, $2 = key -> number of rows (0 if not there yet)
+            aws s3 cp "s3://$1/$2" - 2>/dev/null | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo 0
+          }
+          for i in $(seq 1 60); do
+            pac=$(count "$DM_PACIENTE" dm_paciente.json)
+            echo "Patients in dm_paciente: $pac (target >= $MIN_PACIENTES) [$i/60]"
+            if [ "$pac" -ge "$MIN_PACIENTES" ]; then break; fi
+            sleep 30
+          done
+
+          fun=$(count "$DM_FUNCIONAL" dm_funcional.json)
+          epi=$(count "$DM_EPISODIO"  dm_episodio.json)
+          pro=$(count "$DM_PROC"      dm_procedimientos.json)
+          dia=$(count "$DM_DIAG"      dm_diagnosticos.json)
+
+          {
+            echo "## Datamart results"
+            echo ""
+            echo "| Datamart | Rows |"
+            echo "|---|---|"
+            echo "| dm_paciente | $pac |"
+            echo "| dm_funcional | $fun |"
+            echo "| dm_episodio | $epi |"
+            echo "| dm_procedimientos | $pro |"
+            echo "| dm_diagnosticos | $dia |"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+          if [ "$pac" -lt "$MIN_PACIENTES" ]; then
+            echo "::error::Only $pac patients in the datamart (expected >= $MIN_PACIENTES). Check loader and extractor logs in CloudWatch."
+            exit 1
+          fi
+          echo "OK: $pac patients reached the datamart layer."

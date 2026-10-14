@@ -132,3 +132,69 @@ resource "aws_ecr_repository" "query_api" {
   image_scanning_configuration { scan_on_push = true }
   tags = { Name = "${local.name_prefix}-query-api" }
 }
+
+# ── SQS — PIPELINE ASÍNCRONO DATALAKE → LOADER → EXTRACTOR ─────────────
+#
+# loader-trigger-queue: recibe un mensaje por cada objeto nuevo subido al
+# datalake (raw/fhir/*.json) vía notificación de eventos de S3. El loader
+# hace long-polling sobre esta cola.
+#
+# extractor-trigger-queue: el propio loader publica en esta cola cuando
+# termina de cargar un bundle correctamente. El extractor hace long-polling
+# sobre esta cola y, al recibir un mensaje, relanza la extracción completa
+# de los datamarts.
+
+resource "aws_sqs_queue" "loader_trigger" {
+  name                       = "${local.name_prefix}-loader-trigger-queue"
+  visibility_timeout_seconds = 600
+  message_retention_seconds  = 86400
+  receive_wait_time_seconds  = 20 # long polling
+
+  tags = { Name = "${local.name_prefix}-loader-trigger-queue" }
+}
+
+resource "aws_sqs_queue" "extractor_trigger" {
+  name                       = "${local.name_prefix}-extractor-trigger-queue"
+  visibility_timeout_seconds = 300
+  message_retention_seconds  = 86400
+  receive_wait_time_seconds  = 20 # long polling
+
+  tags = { Name = "${local.name_prefix}-extractor-trigger-queue" }
+}
+
+# Permite que el servicio S3 publique en loader-trigger-queue, restringido
+# al bucket del datalake mediante la condición aws:SourceArn.
+resource "aws_sqs_queue_policy" "loader_trigger" {
+  queue_url = aws_sqs_queue.loader_trigger.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowS3SendMessage"
+        Effect    = "Allow"
+        Principal = { Service = "s3.amazonaws.com" }
+        Action    = "sqs:SendMessage"
+        Resource  = aws_sqs_queue.loader_trigger.arn
+        Condition = {
+          ArnEquals = { "aws:SourceArn" = aws_s3_bucket.fhir_datalake.arn }
+        }
+      }
+    ]
+  })
+}
+
+# Notificación de eventos del bucket datalake → loader-trigger-queue,
+# solo para objetos nuevos bajo raw/fhir/ con extensión .json.
+resource "aws_s3_bucket_notification" "fhir_datalake" {
+  bucket = aws_s3_bucket.fhir_datalake.id
+
+  queue {
+    queue_arn     = aws_sqs_queue.loader_trigger.arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "raw/fhir/"
+    filter_suffix = ".json"
+  }
+
+  depends_on = [aws_sqs_queue_policy.loader_trigger]
+}

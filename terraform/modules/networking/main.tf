@@ -50,3 +50,44 @@ resource "aws_security_group" "rds" {
 
   tags = { Name = "${local.name_prefix}-sg-rds" }
 }
+
+# SG para loader/extractor — servicios backend que consumen de SQS y llaman
+# a FHIR/S3 vía salida a internet, pero no exponen ningún puerto de entrada.
+resource "aws_security_group" "backend_services" {
+  name        = "${local.name_prefix}-sg-backend"
+  description = "Acceso saliente para loader y extractor (SQS, S3, FHIR)"
+  vpc_id      = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${local.name_prefix}-sg-backend" }
+}
+
+# SG para query-api — expone la API REST de consulta de los datamarts
+resource "aws_security_group" "query_api" {
+  name        = "${local.name_prefix}-sg-query-api"
+  description = "Acceso a la Neurorehab Query API"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Query API HTTP"
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${local.name_prefix}-sg-query-api" }
+}

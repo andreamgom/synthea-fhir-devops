@@ -13,3 +13,8 @@ output "ecr_fhir_server_url" { value = aws_ecr_repository.fhir_server.repository
 output "ecr_loader_url" { value = aws_ecr_repository.loader.repository_url }
 output "ecr_extractor_url" { value = aws_ecr_repository.extractor.repository_url }
 output "ecr_query_api_url" { value = aws_ecr_repository.query_api.repository_url }
+
+output "loader_trigger_queue_url" { value = aws_sqs_queue.loader_trigger.id }
+output "loader_trigger_queue_arn" { value = aws_sqs_queue.loader_trigger.arn }
+output "extractor_trigger_queue_url" { value = aws_sqs_queue.extractor_trigger.id }
+output "extractor_trigger_queue_arn" { value = aws_sqs_queue.extractor_trigger.arn }
