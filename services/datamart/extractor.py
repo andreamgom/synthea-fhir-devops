@@ -1,5 +1,13 @@
 # services/datamart/extractor.py
-# Extracts data from HAPI FHIR via REST API and builds neurorehab datamarts
+# Extrae datos de HAPI FHIR vía REST API y construye los datamarts de neurorehabilitación.
+#
+# Modo por defecto (RUN_MODE=sqs): consumidor SQS long-polling sobre
+# extractor-trigger-queue. El loader publica un mensaje en esta cola cada
+# vez que carga un bundle con éxito; al recibirlo, el extractor relanza la
+# extracción completa de los 5 datamarts (operación idempotente).
+#
+# Modo batch (RUN_MODE=batch): comportamiento original, una sola pasada,
+# útil para desarrollo/pruebas locales sin infraestructura SQS.
 
 import requests
 import boto3
@@ -15,6 +23,12 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 FHIR_URL = os.getenv("FHIR_SERVER_URL", "http://localhost:8080/fhir")
+FHIR_SERVER_URL = FHIR_URL  # valor por defecto si no se puede resolver vía ECS
+
+# Descubrimiento de HAPI FHIR vía ECS (alternativa a Cloud Map, bloqueado en Academy)
+FHIR_ECS_CLUSTER = os.getenv("FHIR_ECS_CLUSTER", "")
+FHIR_ECS_SERVICE = os.getenv("FHIR_ECS_SERVICE", "")
+FHIR_PORT        = os.getenv("FHIR_PORT", "8080")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "./output")
 
@@ -24,6 +38,12 @@ S3_DM_FUNCIONAL     = os.getenv("S3_DM_FUNCIONAL",     "")
 S3_DM_EPISODIO      = os.getenv("S3_DM_EPISODIO",      "")
 S3_DM_PROCEDIMIENTOS = os.getenv("S3_DM_PROCEDIMIENTOS", "")
 S3_DM_DIAGNOSTICOS = os.getenv("S3_DM_DIAGNOSTICOS", "")
+
+# Pipeline asíncrono SQS
+RUN_MODE                    = os.getenv("RUN_MODE", "sqs")  # "sqs" | "batch"
+EXTRACTOR_TRIGGER_QUEUE_URL = os.getenv("EXTRACTOR_TRIGGER_QUEUE_URL", "")
+SQS_WAIT_TIME_SECONDS       = int(os.getenv("SQS_WAIT_TIME_SECONDS", "20"))
+SQS_MAX_MESSAGES            = int(os.getenv("SQS_MAX_MESSAGES", "10"))
 
 HEADERS = {"Accept": "application/fhir+json"}
 
@@ -55,6 +75,43 @@ DIAGNOSTICOS_NEUROREHAB = {
     "422768004": "Minimally conscious state",
     "128613002": "Other neurological condition"
 }
+
+def resolve_fhir_url() -> str:
+    """Devuelve la URL base de HAPI FHIR.
+
+    AWS Academy bloquea AWS Cloud Map (servicediscovery:*), así que no hay un
+    nombre DNS interno estable para el servicio fhir-server. Si se configuran
+    FHIR_ECS_CLUSTER y FHIR_ECS_SERVICE, se consulta a ECS la IP privada de la
+    tarea en ejecución de ese servicio. Esa IP cambia en cada despliegue, por
+    eso se resuelve en cada uso y no una sola vez al arrancar.
+
+    Si no hay configuración ECS (desarrollo local) o la consulta falla, se usa
+    FHIR_SERVER_URL; en ese caso la carga fallará de forma segura y el mensaje
+    SQS volverá a la cola para reintentarse.
+    """
+    if not (FHIR_ECS_CLUSTER and FHIR_ECS_SERVICE):
+        return FHIR_SERVER_URL
+    try:
+        ecs = boto3.client("ecs", region_name=AWS_REGION)
+        task_arns = ecs.list_tasks(
+            cluster=FHIR_ECS_CLUSTER,
+            serviceName=FHIR_ECS_SERVICE,
+            desiredStatus="RUNNING",
+        ).get("taskArns", [])
+        if task_arns:
+            tasks = ecs.describe_tasks(cluster=FHIR_ECS_CLUSTER, tasks=task_arns).get("tasks", [])
+            for task in tasks:
+                if task.get("lastStatus") != "RUNNING":
+                    continue
+                for attachment in task.get("attachments", []):
+                    for detail in attachment.get("details", []):
+                        if detail.get("name") == "privateIPv4Address":
+                            return f"http://{detail['value']}:{FHIR_PORT}/fhir"
+        log.warning(f"No hay ninguna tarea RUNNING de {FHIR_ECS_SERVICE} en {FHIR_ECS_CLUSTER}")
+    except Exception as e:
+        log.warning(f"No se pudo resolver la IP de HAPI FHIR vía ECS: {e}")
+    return FHIR_SERVER_URL
+
 
 def fetch_all(resource_type: str) -> list:
     results = []
@@ -172,7 +229,11 @@ def upload_to_s3(bucket: str, key: str, data: list):
     log.info(f"  → Uploaded to s3://{bucket}/{key}")
 
 
-def main():
+def run_extraction() -> None:
+    """Ejecuta una pasada completa de extracción y reconstrucción de los 5 datamarts."""
+    global FHIR_URL
+    # La IP privada de HAPI FHIR cambia en cada despliegue: se resuelve en cada pasada
+    FHIR_URL = resolve_fhir_url()
     log.info(f"Starting Extractor Builder — FHIR: {FHIR_URL}")
 
     log.info("Extracting patients...")
@@ -204,13 +265,63 @@ def main():
     dm_diagnosticos = build_dm_diagnosticos(conditions)
     save_local("dm_diagnosticos", dm_diagnosticos)
     upload_to_s3(S3_DM_DIAGNOSTICOS, "dm_diagnosticos.json", dm_diagnosticos)
-    log.info(f"   Diagnoses:      {len(dm_diagnosticos)}")
 
     log.info("✅ Extraction complete")
     log.info(f"   Patients:       {len(dm_paciente)}")
     log.info(f"   Clinical scales:{len(dm_funcional)}")
     log.info(f"   Episodes:       {len(dm_episodio)}")
     log.info(f"   Procedures:     {len(dm_procedimientos)}")
+    log.info(f"   Diagnoses:      {len(dm_diagnosticos)}")
+
+
+# ── PIPELINE ASÍNCRONO (SQS) ────────────────────────────────────────────
+
+def consume() -> None:
+    """Bucle principal: long-polling sobre extractor-trigger-queue.
+
+    El loader publica un mensaje por cada bundle cargado con éxito, así que
+    pueden llegar varios mensajes seguidos por una misma tanda de datos. Se
+    recogen todos los que estén disponibles y se lanza UNA sola extracción
+    para esa ronda (la extracción reconstruye los datamarts completos, por
+    lo que relanzarla varias veces seguidas es idempotente pero innecesario).
+    """
+    if not EXTRACTOR_TRIGGER_QUEUE_URL:
+        raise RuntimeError("EXTRACTOR_TRIGGER_QUEUE_URL no configurada")
+
+    sqs_client = boto3.client("sqs", region_name=AWS_REGION)
+
+    log.info(f"Extractor escuchando en {EXTRACTOR_TRIGGER_QUEUE_URL} — FHIR: {FHIR_ECS_SERVICE or FHIR_URL}")
+
+    while True:
+        response = sqs_client.receive_message(
+            QueueUrl=EXTRACTOR_TRIGGER_QUEUE_URL,
+            MaxNumberOfMessages=SQS_MAX_MESSAGES,
+            WaitTimeSeconds=SQS_WAIT_TIME_SECONDS
+        )
+        messages = response.get("Messages", [])
+        if not messages:
+            continue
+
+        log.info(f"Disparo recibido ({len(messages)} mensaje(s)) — relanzando extracción")
+        try:
+            run_extraction()
+        except Exception as e:
+            log.error(f"❌ Error durante la extracción: {e}")
+            # No se borran los mensajes: se reintenta tras el visibility timeout
+            continue
+
+        for msg in messages:
+            sqs_client.delete_message(
+                QueueUrl=EXTRACTOR_TRIGGER_QUEUE_URL,
+                ReceiptHandle=msg["ReceiptHandle"]
+            )
+
+
+def main():
+    if RUN_MODE == "batch":
+        run_extraction()
+    else:
+        consume()
 
 
 if __name__ == "__main__":

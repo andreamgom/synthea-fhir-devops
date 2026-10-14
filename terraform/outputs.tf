@@ -20,6 +20,10 @@ output "fhir_task_definition_arn" {
   value = module.compute.fhir_task_definition_arn
 }
 
+output "query_api_task_definition_arn" {
+  value = module.compute.query_api_task_definition_arn
+}
+
 output "fhir_datalake_bucket" {
   value = module.storage.fhir_datalake_bucket_name
 }
@@ -42,4 +46,12 @@ output "dm_procedimientos_bucket" {
 
 output "dm_diagnosticos_bucket" {
   value = module.storage.dm_diagnosticos_bucket_name
+}
+
+output "loader_trigger_queue_url" {
+  value = module.storage.loader_trigger_queue_url
+}
+
+output "extractor_trigger_queue_url" {
+  value = module.storage.extractor_trigger_queue_url
 }

@@ -1,12 +1,10 @@
 # .github/workflows/synthea-generate.yml
-# Genera datos sintéticos cada lunes a las 6:00 UTC y los sube a S3
+# Genera datos sintéticos y los sube a S3 (solo se lanza a mano)
 
 name: Synthea Generate
 
 on:
-  schedule:
-    - cron: "0 6 * * 1"  # cada lunes a las 6:00 UTC
-  workflow_dispatch:       # también se puede lanzar manualmente
+  workflow_dispatch:       # solo se lanza manualmente
 
 env:
   AWS_REGION:  us-east-1

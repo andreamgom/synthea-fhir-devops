@@ -4,6 +4,7 @@ terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/terraform.tfvars
 terraform/*.tfvars
+terraform/tfplan
 
 # Synthea
 services/synthea/.git
