@@ -1,0 +1,8 @@
+[run]
+relative_files = True
+source = .
+omit =
+    tests/*
+    scripts/*
+    */__pycache__/*
+    services/synthea/*

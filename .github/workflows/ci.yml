@@ -47,6 +47,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Generate coverage report
+        run: |
+          pip install --only-binary :all: -r tests/requirements.txt
+          pip install --only-binary :all: -r services/loader/requirements.txt
+          pip install --only-binary :all: -r services/datamart/requirements.txt
+          pytest tests/ -m unit --cov --cov-report=xml:coverage.xml
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
