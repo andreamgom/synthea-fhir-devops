@@ -54,9 +54,9 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          pip install -r tests/requirements.txt
-          pip install -r services/loader/requirements.txt
-          pip install -r services/datamart/requirements.txt
+          pip install --only-binary :all: -r tests/requirements.txt
+          pip install --only-binary :all: -r services/loader/requirements.txt
+          pip install --only-binary :all: -r services/datamart/requirements.txt
           pytest tests/ -m unit --cov --cov-report=xml:coverage.xml
 
       - name: SonarCloud Scan
