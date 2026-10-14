@@ -57,7 +57,7 @@ jobs:
           pip install -r tests/requirements.txt
           pip install -r services/loader/requirements.txt
           pip install -r services/datamart/requirements.txt
-          pytest tests/ -m unit --cov=services --cov-report=xml:coverage.xml
+          pytest tests/ -m unit --cov --cov-report=xml:coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

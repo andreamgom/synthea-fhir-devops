@@ -13,3 +13,7 @@ services/synthea/.git
 **/__pycache__/
 *.pyc
 services/datamart/output/
+
+# Cobertura (se genera en CI)
+coverage.xml
+.coverage
