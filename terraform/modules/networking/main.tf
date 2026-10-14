@@ -10,12 +10,14 @@ resource "aws_security_group" "fhir_server" {
   description = "Acceso al servidor HAPI FHIR"
   vpc_id      = var.vpc_id
 
+  # HAPI no tiene autenticacion y tiene $expunge activo: solo se permite el acceso
+  # desde los servicios backend (loader y extractor), nunca desde internet.
   ingress {
-    description = "FHIR HTTP"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "FHIR HTTP desde loader y extractor"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.backend_services.id]
   }
 
   egress {
